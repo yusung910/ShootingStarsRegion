@@ -73,4 +73,6 @@ PFOnlineGame/Plugins/*/Intermediate/*
 # Cache files for the editor to use
 PFOnlineGame/DerivedDataCache/*
 
-PFOnlineGame/Content/*
+PFOnlineGame/Content/LordVictor
+PFOnlineGame/Content/Sword_Animations
+PFOnlineGame/Content/ParagonRampage
