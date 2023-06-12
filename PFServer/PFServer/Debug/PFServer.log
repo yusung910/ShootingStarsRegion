@@ -1,0 +1,11 @@
+﻿  DBConnector.cpp
+  MainIOCP.cpp
+E:\PFOnlineGame\PFServer\PFServer\MainIOCP.cpp(232,7): warning C4101: 'nResult' :참조되지 않은 지역 변수입니다.
+E:\PFOnlineGame\PFServer\PFServer\MainIOCP.cpp(235,8): warning C4101: 'sendBytes' :참조되지 않은 지역 변수입니다.
+E:\PFOnlineGame\PFServer\PFServer\MainIOCP.cpp(312,11): warning C4477: 'printf_s' : 서식 문자열 '%s'에 'char *' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'std::string'입니다.
+E:\PFOnlineGame\PFServer\PFServer\MainIOCP.cpp(312,11): warning C4477: 'printf_s' : 서식 문자열 '%s'에 'char *' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'std::string'입니다.
+E:\PFOnlineGame\PFServer\PFServer\MainIOCP.cpp(333,11): warning C4477: 'printf_s' : 서식 문자열 '%s'에 'char *' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'std::string'입니다.
+E:\PFOnlineGame\PFServer\PFServer\MainIOCP.cpp(333,11): warning C4477: 'printf_s' : 서식 문자열 '%s'에 'char *' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'std::string'입니다.
+  main.cpp
+  코드를 생성하고 있습니다...
+LINK : fatal error LNK1104: 'libmysql.lib' 파일을 열 수 없습니다.

@@ -1,0 +1,4 @@
+﻿CharacterInfo.obj : error LNK2001: 확인할 수 없는 외부 기호 "class std::basic_ostream<char,struct std::char_traits<char> > & __cdecl operator<<(class std::basic_ostream<char,struct std::char_traits<char> > &,class PlayerVO &)" (??6@YAAEAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AEAV01@AEAVPlayerVO@@@Z)
+CharacterInfo.obj : error LNK2001: 확인할 수 없는 외부 기호 "class std::basic_istream<char,struct std::char_traits<char> > & __cdecl operator>>(class std::basic_istream<char,struct std::char_traits<char> > &,class PlayerVO &)" (??5@YAAEAV?$basic_istream@DU?$char_traits@D@std@@@std@@AEAV01@AEAVPlayerVO@@@Z)
+PacketProcesses.obj : error LNK2001: 확인할 수 없는 외부 기호 "class PlayerVO * __cdecl operator<<(class PlayerVO *,class PlayerVO)" (??6@YAPEAVPlayerVO@@PEAV0@V0@@Z)
+E:\ShootingStarsRegion\PFServer\PFServer\x64\Release\PFServer.exe : fatal error LNK1120: 3개의 확인할 수 없는 외부 참조입니다.

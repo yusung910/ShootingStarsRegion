@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DataAccess" Collapsed="true">
+    <Position X="3.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAIAAAAAAAAAAAAAIAAAAAAAAAABAAAAAAI=</HashCode>
+      <FileName>DataAccess.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBConnector" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAQAAAAAAAAAYCAAAAAAAQQAAAAAAAAAAA=</HashCode>
+      <FileName>DBConnector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IOCPBase" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQBAEAABAAAQAggEAAAAAAIIAAgAAAAAAABAAAQRA=</HashCode>
+      <FileName>IOCPBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MainIOCP" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIBAFAQAIAAEQAIgAEAABCAAAAEAAAACAABAAABAQAA=</HashCode>
+      <FileName>MainIOCP.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PacketProcesses" Collapsed="true">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAABACAAAAgAIIAIAIACBAAAAAAAAAQgAABAAI=</HashCode>
+      <FileName>PacketProcesses.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>
