@@ -5,8 +5,7 @@
 # 1. 사용 도구
  - 클라이언트 : UnrealEngine 4.26.2 C++ 프로젝트
  - 서버 : IOCP
- - DB : Mysql
- - 
+ - DB : Mysql 8.0
 
 # 2. 구현 기능
  2.1 서버 구현 기능
