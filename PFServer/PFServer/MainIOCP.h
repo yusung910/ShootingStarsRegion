@@ -1,6 +1,9 @@
 ﻿#pragma once
 
 #include "IOCPBase.h"
+#include "DataAccess.h"
+#include "PlayerVO.h"
+#include "MonsterVO.h"
 
 using namespace std;
 

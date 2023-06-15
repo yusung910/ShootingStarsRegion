@@ -1,8 +1,12 @@
 ﻿#pragma once
 
-#include "PacketProcesses.h"
+#include "stdafx.h"
+
 // winsock2 사용을 위해 아래 코멘트 추가
 #pragma comment(lib, "ws2_32.lib")
+//서버 포트
+#define SERVER_PORT		8000
+
 class IOCPBase
 {
 public:

@@ -8,19 +8,18 @@
 // 멀티바이트 집합 사용시 define
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
-
 #include <WinSock2.h>
 #include <map>
 #include <vector>
 #include <iostream>
 #include <string>
 
+
 using namespace std;
 
 //패킷 최대 버퍼
 #define	MAX_BUFFER		4096
-//서버 포트
-#define SERVER_PORT		8000
+
 //최대 클라이언트 연결 수
 #define MAX_CLIENTS		100
 

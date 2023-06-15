@@ -9,6 +9,7 @@ PlayerVO::~PlayerVO()
 {
 
 }
+
 void PlayerVO::SetCharacterListToStream(ostream& stream, PlayerVO& vo)
 {
 	for (const auto& m : vo.infoMap)
@@ -19,7 +20,7 @@ void PlayerVO::SetCharacterListToStream(ostream& stream, PlayerVO& vo)
 	stream << ",";
 }
 
-PACKETDLL_API void PlayerVO::Damaged(float dmg)
+void PlayerVO::Damaged(float dmg)
 {
 	CUR_HP -= dmg;
 }
@@ -187,6 +188,39 @@ istream& operator>>(istream& stream, PlayerVO& vo)
 	stream >> vo.CUR_HP;
 	stream >> vo.MAX_MANA;
 	stream >> vo.CUR_MANA;
+
+	return stream;
+}
+
+ostream& operator<<(ostream& stream, CharacterInfo& info)
+{
+	stream << info.players.size() << endl;
+	for (auto& kvp : info.players)
+	{
+		stream << kvp.first << endl;
+		stream << kvp.second << endl;
+	}
+
+	return stream;
+}
+istream& operator>>(istream& stream, CharacterInfo& info)
+{
+	int nPlayers = 0;
+	int SessionId = 0;
+	PlayerVO vo;
+	info.players.clear();
+
+	stream >> nPlayers;
+
+	for (int i = 0; i < nPlayers; i++)
+	{
+		stream >> SessionId;
+		stream >> vo;
+		info.players[SessionId] = vo;
+		vector<float> loc = { vo.X, vo.Y, vo.Z };
+		info.PlayerLocs[SessionId] = loc;
+		//info.players.insert(pair<int, PlayerVO>(SessionId, vo));
+	}
 
 	return stream;
 }

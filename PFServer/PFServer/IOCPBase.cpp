@@ -10,7 +10,6 @@ IOCPBase::IOCPBase()
 	// 멤버 변수 초기화
 	bWorkerThread = true;
 	bAccept = true;
-
 }
 
 

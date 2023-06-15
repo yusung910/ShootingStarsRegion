@@ -1,5 +1,4 @@
-
-#include "PlayerVO.h"
+#include "stdafx.h"
 
 class MonsterVO
 {
@@ -8,7 +7,7 @@ public:
 	PACKETDLL_API virtual ~MonsterVO();
 	
 	// 플레이어로 이동
-	PACKETDLL_API void SetDestLoc(const PlayerVO& target);
+	PACKETDLL_API void SetDestLoc(vector<float> loc);
 
 	//원래자리로 이동
 	PACKETDLL_API void MoveOri();
@@ -23,7 +22,7 @@ public:
 	PACKETDLL_API ECondition GetMonsterCond();
 
 	// 추격범위에 있는 가장 가까운 플레이어를 확인하고 관련 데이터를 세팅
-	PACKETDLL_API void SetPlayerInTrackingInfo(const map<int, PlayerVO> players);
+	PACKETDLL_API void SetPlayerInTrackingInfo(const map<int, vector<float>> locs);
 
 	// 위치 설정
 	PACKETDLL_API void SetLocation(float x, float y, float z);

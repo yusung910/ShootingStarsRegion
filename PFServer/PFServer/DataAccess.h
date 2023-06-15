@@ -1,9 +1,9 @@
 ﻿#pragma once
 #include <string>
 #include <vector>
-
-#include "../PacketDLL/CharacterInfo.h"
 #include "DBConnector.h"
+
+class PlayerVO;
 
 class DataAccess : public DBConnector
 {

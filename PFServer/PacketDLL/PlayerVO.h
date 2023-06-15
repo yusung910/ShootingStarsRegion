@@ -58,3 +58,14 @@ public:
 
 };
 
+
+class PACKETDLL_API CharacterInfo
+{
+public:
+
+	PACKETDLL_API friend ostream& operator<<(ostream& stream, CharacterInfo& info);
+	PACKETDLL_API friend istream& operator>>(istream& stream, CharacterInfo& info);
+
+	map<int, PlayerVO> players;
+	map<int, vector<float>> PlayerLocs;
+};

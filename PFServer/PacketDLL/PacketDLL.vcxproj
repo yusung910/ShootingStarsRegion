@@ -19,18 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CharacterInfo.cpp" />
     <ClCompile Include="MonsterVO.cpp" />
     <ClCompile Include="PlayerVO.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CharacterInfo.h" />
     <ClInclude Include="MonsterVO.h" />
     <ClInclude Include="PlayerVO.h" />
     <ClInclude Include="stdafx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

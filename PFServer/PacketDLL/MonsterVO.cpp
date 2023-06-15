@@ -16,11 +16,11 @@ MonsterVO::~MonsterVO()
 {
 }
 
-void MonsterVO::SetDestLoc(const PlayerVO& target)
+void MonsterVO::SetDestLoc(vector<float> loc)
 {
-	DEST_X = target.X;
-	DEST_Y = target.Y;
-	DEST_Z = target.Z;
+	DEST_X = loc.at(0);
+	DEST_Y = loc.at(1);
+	DEST_Z = loc.at(2);
 }
 
 void MonsterVO::MoveOri()
@@ -57,24 +57,23 @@ ECondition MonsterVO::GetMonsterCond()
 	return MonsterCond;
 }
 
-void MonsterVO::SetPlayerInTrackingInfo(const map<int, PlayerVO> players)
+void MonsterVO::SetPlayerInTrackingInfo(const map<int, vector<float>> locs)
 {
-	map<double, PlayerVO> TargetDists;
+	map<double, vector<float>> TargetDists;
 	
-	for (auto p : players)
+	for (auto p : locs)
 	{
-		PlayerVO tmpPvo = p.second;
-		double tmpDist = sqrt(pow(tmpPvo.X - X, 2) + pow(tmpPvo.Y - Y, 2) + pow(tmpPvo.Z - Z, 2));
-		TargetDists.insert(pair<double, PlayerVO>(tmpDist, tmpPvo));
+		vector<float> loc = p.second;
+		double tmpDist = sqrt(pow(loc.at(0) - X, 2) + pow(loc.at(1) - Y, 2) + pow(loc.at(2) - Z, 2));
+		TargetDists.insert(pair<double, vector<float>>(tmpDist, loc));
 	}
 
-	map< double, PlayerVO >::iterator it = TargetDists.begin();
+	map< double, vector<float> >::iterator it = TargetDists.begin();
 	//목표 좌표
 	SetDestLoc(it->second);
 
-	isPlayerInTraceRange = (it->first <= TraceRange && it->second.PlayerCond != ECondition::IS_DEATHED);
-
-	isPlayerInHitRange = (it->first <= HitRange && it->second.PlayerCond != ECondition::IS_DEATHED);
+	isPlayerInTraceRange = (it->first <= TraceRange);
+	isPlayerInHitRange = (it->first <= HitRange);
 
 	TrackReqSec = (it->first / Velocity) * 1000;
 }

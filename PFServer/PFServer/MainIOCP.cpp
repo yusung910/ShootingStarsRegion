@@ -1,11 +1,12 @@
 ﻿#include "MainIOCP.h"
-
+#include "PacketProcesses.h"
 #include <process.h>
 #include <sstream>
 #include <algorithm>
 #include <string>
 #include <cstdlib> //rand(), srand()
 #include <ctime> //time()
+
 // static 변수 설정
 map<int, SOCKET>	MainIOCP::SessionSocket;
 DataAccess			MainIOCP::Dao;
@@ -316,7 +317,7 @@ void MainIOCP::MonsterManagementThread()
 			if (cInfo.players.size() <= 0 || !monster->IsAlive())
 				continue;
 
-			monster->SetPlayerInTrackingInfo(cInfo.players);
+			monster->SetPlayerInTrackingInfo(cInfo.PlayerLocs);
 		}
 
 		for (auto& monMap : monInfo.monsters)
@@ -376,5 +377,5 @@ void MainIOCP::CreateMonsterManagementThread()
 	}
 	ResumeThread(MonsterHandle);
 
-	printf_s("ERROR::Monster Thread 시작...\n");
+	printf_s("INFO::Monster Thread 시작...\n");
 }
