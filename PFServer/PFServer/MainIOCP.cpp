@@ -114,7 +114,7 @@ bool MainIOCP::CreateWorkerThread()
 	GetSystemInfo(&sysInfo);
 	printf_s("INFO::CPU 갯수 : %d\n", sysInfo.dwNumberOfProcessors);
 	// 적절한 작업 스레드의 갯수는 (CPU * 2) + 1
-	nThreadCnt = sysInfo.dwNumberOfProcessors * 2;
+	nThreadCnt = sysInfo.dwNumberOfProcessors;
 
 	// thread handler 선언
 	hWorkerHandle = new HANDLE[nThreadCnt];

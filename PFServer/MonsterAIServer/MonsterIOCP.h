@@ -28,6 +28,10 @@ public:
 
 	void InitializeMonsterSet();
 
+	void MonsterMainThread();
+
+	void Broadcast(stringstream& SendStream);
+
 private:
 	static map<int, SOCKET>  SessionSocket;		// 세션별 소켓 저장
 	static CharacterInfo	 	     cInfo;		// 접속한 클라이언트의 정보를 저장	
