@@ -153,13 +153,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%BOOST_ROOT%\stage\lib;%MYSQL_ROOT%\lib64\vs14;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mysqlcppconn.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PacketDLL.lib;mysqlcppconn.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DataAccess.cpp" />
     <ClCompile Include="DBConnector.cpp" />
-    <ClCompile Include="IOCPBase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainIOCP.cpp" />
     <ClCompile Include="PacketProcesses.cpp" />
@@ -167,7 +166,6 @@
   <ItemGroup>
     <ClInclude Include="DataAccess.h" />
     <ClInclude Include="DBConnector.h" />
-    <ClInclude Include="IOCPBase.h" />
     <ClInclude Include="MainIOCP.h" />
     <ClInclude Include="PacketProcesses.h" />
   </ItemGroup>

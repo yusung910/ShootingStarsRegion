@@ -13,20 +13,12 @@ DataAccess			MainIOCP::Dao;
 CRITICAL_SECTION	MainIOCP::csPlayers;
 PlayerVO			MainIOCP::vo;
 CharacterInfo		MainIOCP::cInfo;
-MonsterSet			MainIOCP::monInfo;
 
 
 unsigned int WINAPI CallWorkerThread(LPVOID p)
 {
 	MainIOCP* pOverlappedEvent = (MainIOCP*)p;
 	pOverlappedEvent->WorkerThread();
-	return 0;
-}
-
-unsigned int WINAPI CallMonsterThread(LPVOID p)
-{
-	MainIOCP* pOverlappedEvent = (MainIOCP*)p;
-	pOverlappedEvent->MonsterManagementThread();
 	return 0;
 }
 
@@ -44,7 +36,7 @@ MainIOCP::MainIOCP()
 	fnProcess[EPacketType::ENROLL_PLAYER].funcProcessPacket = PacketProcesses::EnrollCharacter;
 	fnProcess[EPacketType::SEND_PLAYER].funcProcessPacket = PacketProcesses::SyncCharacters;
 	fnProcess[EPacketType::HIT_PLAYER].funcProcessPacket = PacketProcesses::HitCharacter;
-	fnProcess[EPacketType::HIT_MONSTER].funcProcessPacket = PacketProcesses::HitMonster;
+
 	fnProcess[EPacketType::CHAT].funcProcessPacket = PacketProcesses::BroadcastChat;
 
 }
@@ -70,6 +62,39 @@ MainIOCP::~MainIOCP()
 	DeleteCriticalSection(&csPlayers);
 }
 
+bool MainIOCP::Initialize()
+{
+	IOCPBase::Initialize();
+	int nResult;
+	// 서버 정보 설정
+	SOCKADDR_IN serverAddr;
+	serverAddr.sin_family = PF_INET;
+	serverAddr.sin_port = htons(SERVER_PORT);
+	serverAddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
+	// 소켓 설정
+	// boost bind 와 구별짓기 위해 ::bind 사용
+	nResult = ::bind(ListenSocket, (struct sockaddr*)&serverAddr, sizeof(SOCKADDR_IN));
+
+	if (nResult == SOCKET_ERROR)
+	{
+		printf_s("ERROR::bind 실패\n");
+		closesocket(ListenSocket);
+		WSACleanup();
+		return false;
+	}
+
+	// 수신 대기열 생성
+	nResult = listen(ListenSocket, 5);
+	if (nResult == SOCKET_ERROR)
+	{
+		printf_s("ERROR::listen 실패\n");
+		closesocket(ListenSocket);
+		WSACleanup();
+		return false;
+	}
+	return true;
+}
+
 void MainIOCP::StartServer()
 {
 	//23.06.06
@@ -77,7 +102,6 @@ void MainIOCP::StartServer()
 	//클라이언트에서 실시간으로 위치 정보를 패킷으로 전달 받으려고 했으나
 	//서버에서 진행중인 쓰레드가 사용하고 있는 중에
 	//클라이언트에서 전송 받은 정보를 같은 변수에다 덮어쓰려다가 에러 발생
-	CreateMonsterManagementThread();
 	IOCPBase::StartServer();
 }
 
@@ -226,156 +250,4 @@ void MainIOCP::Send(stSOCKETINFO* pSocket)
 	{
 		printf_s("ERROR::WSASend 실패 : %d \n", WSAGetLastError());
 	}
-}
-
-
-void MainIOCP::InitializeMonsterSet()
-{
-	srand((unsigned int)time(NULL));
-
-	// 몬스터 초기화	
-	MonsterVO mFields;
-
-	mFields.X = -2654;
-	mFields.Y = 3629;
-	mFields.Z = -461;
-
-	mFields.ORI_X = -2654;
-	mFields.ORI_Y = 3629;
-	mFields.ORI_Z = -461;
-
-	mFields.MAX_HP = 100.0f;
-	mFields.CUR_HP = 100.0f;
-	mFields.Id = rand();
-	mFields.Damage = 25.0f;
-
-	monInfo.monsters[mFields.Id] = mFields;
-
-	mFields.X = -1374;
-	mFields.Y = 3629;
-	mFields.Z = -520;
-
-	mFields.ORI_X = -1374;
-	mFields.ORI_Y = 3629;
-	mFields.ORI_Z = -520;
-
-	mFields.Id = rand();
-	monInfo.monsters[mFields.Id] = mFields;
-
-	mFields.X = -724;
-	mFields.Y = 3629;
-	mFields.Z = -520;
-
-	mFields.ORI_X = -724;
-	mFields.ORI_Y = 3629;
-	mFields.ORI_Z = -520;
-	mFields.Id = rand();
-	monInfo.monsters[mFields.Id] = mFields;
-
-	mFields.X = -830;
-	mFields.Y = 1710;
-	mFields.Z = -494;
-
-	mFields.ORI_X = -1160;
-	mFields.ORI_Y = 1709;
-	mFields.ORI_Z = -410;
-	mFields.Id = rand();
-	monInfo.monsters[mFields.Id] = mFields;
-}
-
-void MainIOCP::MonsterManagementThread()
-{
-	//초기 몬스터 세팅
-	InitializeMonsterSet();
-
-	//몬스터 리젠 여부
-	bool bIsMonsterRespawn = true;
-	//기본 딜레이
-	DWORD fThreadDelay = 500.0;
-	//몬스터 전부가 죽었는지
-	int nMonsterAliveCount = MainIOCP::monInfo.monsters.size();
-
-	// 로직 시작
-	while (true)
-	{
-		if (nMonsterAliveCount == 0)
-		{
-			Sleep(5 * 1000);
-			InitializeMonsterSet();
-		}
-
-
-		nMonsterAliveCount = MainIOCP::monInfo.monsters.size();
-
-		//몬스터 근처에 유저가 있는지 판별
-		for (auto& kvp : monInfo.monsters)
-		{
-			auto& monMap = kvp.second;
-			MonsterVO* monster = &MainIOCP::monInfo.monsters[monMap.Id];
-
-			//접속한 플레이어가 없거나 몬스터가 죽었을 경우 실행하지 않는다.
-			if (cInfo.players.size() <= 0 || !monster->IsAlive())
-				continue;
-
-			monster->SetPlayerInTrackingInfo(cInfo.PlayerLocs);
-		}
-
-		for (auto& monMap : monInfo.monsters)
-		{
-			auto& mon = monMap.second;
-			MonsterVO* monster = &MainIOCP::monInfo.monsters[mon.Id];
-			
-			if (monster->isPlayerInTraceRange)
-			{
-				if (monster->isPlayerInHitRange)
-				{
-					if (monster->MonsterCond == ECondition::IS_ATTACK)
-					{
-						monster->MonsterCond = ECondition::IS_IDLE;
-					}
-					else
-					{
-						monster->MonsterCond = ECondition::IS_ATTACK;
-					}
-				}
-
-				if(monster->MonsterCond == ECondition::IS_IDLE)
-				{
-					monster->MonsterCond = ECondition::IS_MOVE;
-					monster->ChangeLocToDestLoc();
-				}
-			}
-			else if(!monster->isPlayerInTraceRange &&
-					!monster->IsOriginPosition())
-			{
-				monster->MoveOri();
-				monster->MonsterCond = ECondition::IS_MOVE;
-			}
-			else
-			{
-				monster->MonsterCond = ECondition::IS_IDLE;
-			}
-
-		}
-
-		PacketProcesses::SpawnAllMonsters();
-		Sleep(fThreadDelay);
-	}
-}
-
-void MainIOCP::CreateMonsterManagementThread()
-{
-	unsigned int threadId;
-
-	MonsterHandle = (HANDLE*)_beginthreadex(
-		NULL, 0, &CallMonsterThread, this, CREATE_SUSPENDED, &threadId
-	);
-	if (MonsterHandle == NULL)
-	{
-		printf_s("ERROR::Monster Thread 생성 실패\n");
-		return;
-	}
-	ResumeThread(MonsterHandle);
-
-	printf_s("INFO::Monster Thread 시작...\n");
 }

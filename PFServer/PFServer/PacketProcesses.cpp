@@ -232,54 +232,6 @@ void PacketProcesses::HitCharacter(stringstream& RecvStream, stSOCKETINFO* pSock
 	MainIOCP::Send(pSocket);
 }
 
-void PacketProcesses::HitMonster(stringstream& RecvStream, stSOCKETINFO* pSocket)
-{
-	// 몬스터 피격 처리
-	MonsterVO monsVO;
-	RecvStream >> monsVO;
-	int monsID = monsVO.Id;
-
-	MainIOCP::monInfo.monsters[monsID].Damaged(monsVO.BeDamageAmount);
-	printf_s("INFO::몬스터 [%d] 데미지 : %f 받음 \n", monsID, monsVO.BeDamageAmount);
-	if (MainIOCP::monInfo.monsters[monsID].IsAlive())
-	{
-		stringstream SendStream;
-		SendStream << EPacketType::DAMAGED_MONSTER << endl;
-		SendStream << MainIOCP::monInfo.monsters[monsID] << endl;
-		Broadcast(SendStream);
-	}
-	else
-	{
-		printf_s("INFO::몬스터 [%d] 사망! \n", monsID);
-		stringstream SendStream;
-		SendStream << EPacketType::DESTROY_MONSTER << endl;
-		SendStream << MainIOCP::monInfo.monsters[monsID] << endl;
-
-		MainIOCP::monInfo.monsters.erase(monsID);
-		Broadcast(SendStream);
-	}
-}
-
-void PacketProcesses::SyncMonsters(int mId)
-{
-	stringstream SendStream;
-	
-	SendStream << EPacketType::SYNC_MONSTER << endl;
-	SendStream << MainIOCP::monInfo.monsters[mId] << endl;
-
-	Broadcast(SendStream);
-}
-
-void PacketProcesses::SpawnAllMonsters()
-{
-	stringstream SendStream;
-
-	SendStream << EPacketType::SPAWN_MONSTER << endl;
-	SendStream << MainIOCP::monInfo << endl;
-
-	Broadcast(SendStream);
-}
-
 void PacketProcesses::BroadcastChat(stringstream& RecvStream, stSOCKETINFO* pSocket)
 {
 	int SessionId;

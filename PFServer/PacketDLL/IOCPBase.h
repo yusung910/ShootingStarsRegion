@@ -1,30 +1,29 @@
-﻿#pragma once
+#pragma once
 
 #include "stdafx.h"
 
 // winsock2 사용을 위해 아래 코멘트 추가
 #pragma comment(lib, "ws2_32.lib")
-//서버 포트
-#define SERVER_PORT		8000
+
 
 class IOCPBase
 {
 public:
-	IOCPBase();
-	virtual ~IOCPBase();
+	PACKETDLL_API IOCPBase();
+	PACKETDLL_API virtual ~IOCPBase();
 
 	// 소켓 등록 및 서버 정보 설정
-	bool Initialize();
+	PACKETDLL_API virtual bool Initialize();
 	// 서버 시작
-	virtual void StartServer();
+	PACKETDLL_API virtual void StartServer();
 	// 작업 스레드 생성
-	virtual bool CreateWorkerThread() { return false; };
+	PACKETDLL_API virtual bool CreateWorkerThread() { return false; };
 	// 작업 스레드
-	virtual void WorkerThread() {};
+	PACKETDLL_API virtual void WorkerThread() {};
 	// 클라이언트에게 송신
-	virtual void Send(stSOCKETINFO* pSocket);
+	PACKETDLL_API virtual void Send(stSOCKETINFO* pSocket);
 	// 클라이언트 수신 대기
-	virtual void Recv(stSOCKETINFO* pSocket);
+	PACKETDLL_API virtual void Recv(stSOCKETINFO* pSocket);
 
 protected:
 	stSOCKETINFO*	SocketInfo;		// 소켓 정보
@@ -34,6 +33,6 @@ protected:
 	bool			bWorkerThread;	// 작업 스레드 동작 플래그
 	HANDLE*			hWorkerHandle;	// 작업 스레드 핸들		
 	int				nThreadCnt;
-	
+
 
 };

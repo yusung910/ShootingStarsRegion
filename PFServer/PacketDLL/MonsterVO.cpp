@@ -1,4 +1,6 @@
 #include "MonsterVO.h"
+#include "PlayerVO.h"
+
 #include <thread>
 MonsterVO::MonsterVO()
 	:X(0), Y(0), Z(0),
@@ -16,11 +18,11 @@ MonsterVO::~MonsterVO()
 {
 }
 
-void MonsterVO::SetDestLoc(vector<float> loc)
+void MonsterVO::SetDestLoc(PlayerVO vo)
 {
-	DEST_X = loc.at(0);
-	DEST_Y = loc.at(1);
-	DEST_Z = loc.at(2);
+	DEST_X = vo.X;
+	DEST_Y = vo.Y;
+	DEST_Z = vo.Z;
 }
 
 void MonsterVO::MoveOri()
@@ -57,18 +59,18 @@ ECondition MonsterVO::GetMonsterCond()
 	return MonsterCond;
 }
 
-void MonsterVO::SetPlayerInTrackingInfo(const map<int, vector<float>> locs)
+void MonsterVO::SetPlayerInTrackingInfo(const map<int, PlayerVO> players)
 {
-	map<double, vector<float>> TargetDists;
+	map<double, PlayerVO> TargetDists;
 	
-	for (auto p : locs)
+	for (auto p : players)
 	{
-		vector<float> loc = p.second;
-		double tmpDist = sqrt(pow(loc.at(0) - X, 2) + pow(loc.at(1) - Y, 2) + pow(loc.at(2) - Z, 2));
-		TargetDists.insert(pair<double, vector<float>>(tmpDist, loc));
+		PlayerVO tmpPvo = p.second;
+		double tmpDist = sqrt(pow(tmpPvo.X - X, 2) + pow(tmpPvo.Y - Y, 2) + pow(tmpPvo.Z - Z, 2));
+		TargetDists.insert(pair<double, PlayerVO>(tmpDist, tmpPvo));
 	}
 
-	map< double, vector<float> >::iterator it = TargetDists.begin();
+	map< double, PlayerVO >::iterator it = TargetDists.begin();
 	//목표 좌표
 	SetDestLoc(it->second);
 

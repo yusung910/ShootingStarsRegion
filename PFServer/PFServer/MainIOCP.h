@@ -5,6 +5,9 @@
 #include "PlayerVO.h"
 #include "MonsterVO.h"
 
+//서버 포트
+#define SERVER_PORT		8000
+
 using namespace std;
 
 class MainIOCP : public IOCPBase
@@ -12,6 +15,8 @@ class MainIOCP : public IOCPBase
 public:
 	MainIOCP();
 	virtual ~MainIOCP();
+
+	virtual bool Initialize() override;
 
 	virtual void StartServer() override;
 	// 작업 스레드 생성
@@ -22,18 +27,11 @@ public:
 	static void Send(stSOCKETINFO* pSocket);
 
 	static void WriteCharactersInfoToSocket(stSOCKETINFO* pSocket);
-
-	static void InitializeMonsterSet();
-
-	void MonsterManagementThread();
-
-	void CreateMonsterManagementThread();
 private:
 
 	friend class PacketProcesses;
 
 	static CharacterInfo			cInfo;		// 접속한 클라이언트의 정보를 저장	
-	static MonsterSet			  monInfo;		// 몬스터 정보 저장
 	static map<int, SOCKET> SessionSocket;		// 세션별 소켓 저장
 	static float				 HitPoint;		// 타격 데미지
 	static PlayerVO					   vo;		// 캐릭터 정보
@@ -41,5 +39,4 @@ private:
 	static CRITICAL_SECTION		csPlayers;		// CharactersInfo 임계영역
 
 	FuncProcess		fnProcess[100];	// 패킷 처리 구조체
-	HANDLE*			MonsterHandle;	// 몬스터 스레드 핸들러
 };

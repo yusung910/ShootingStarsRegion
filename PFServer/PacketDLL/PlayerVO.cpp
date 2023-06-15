@@ -216,10 +216,12 @@ istream& operator>>(istream& stream, CharacterInfo& info)
 	{
 		stream >> SessionId;
 		stream >> vo;
+
 		info.players[SessionId] = vo;
+		info.players.insert(pair<int, PlayerVO>(SessionId, vo));
+
 		vector<float> loc = { vo.X, vo.Y, vo.Z };
-		info.PlayerLocs[SessionId] = loc;
-		//info.players.insert(pair<int, PlayerVO>(SessionId, vo));
+		info.PlayerLocs.insert(pair<int, vector<float>> (SessionId, loc));
 	}
 
 	return stream;

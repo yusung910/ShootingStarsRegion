@@ -31,14 +31,14 @@ public:
 	//플레이어 피격 패킷 처리
 	static void HitCharacter(stringstream& RecvStream, stSOCKETINFO* pSocket);
 
-	//몬스터 히트 패킷 처리
-	static void HitMonster(stringstream& RecvStream, stSOCKETINFO* pSocket);
+	////몬스터 히트 패킷 처리
+	//static void HitMonster(stringstream& RecvStream, stSOCKETINFO* pSocket);
 
-	//몬스터 sync 패킷 전송
-	static void SyncMonsters(int mId);
+	////몬스터 sync 패킷 전송
+	//static void SyncMonsters(int mId);
 
-	//몬스터 소환 패킷 전송
-	static void SpawnAllMonsters();
+	////몬스터 소환 패킷 전송
+	//static void SpawnAllMonsters();
 
 	//채팅 메시지 전송
 	static void BroadcastChat(stringstream& RecvStream, stSOCKETINFO* pSocket);

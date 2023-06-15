@@ -1,4 +1,4 @@
-﻿#include <process.h>
+#include <process.h>
 #include <sstream>
 #include <algorithm>
 #include <string>
@@ -53,32 +53,6 @@ bool IOCPBase::Initialize()
 		return false;
 	}
 
-	// 서버 정보 설정
-	SOCKADDR_IN serverAddr;
-	serverAddr.sin_family = PF_INET;
-	serverAddr.sin_port = htons(SERVER_PORT);
-	serverAddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
-	// 소켓 설정
-	// boost bind 와 구별짓기 위해 ::bind 사용
-	nResult = ::bind(ListenSocket, (struct sockaddr*)&serverAddr, sizeof(SOCKADDR_IN));
-
-	if (nResult == SOCKET_ERROR)
-	{
-		printf_s("ERROR::bind 실패\n");
-		closesocket(ListenSocket);
-		WSACleanup();
-		return false;
-	}
-
-	// 수신 대기열 생성
-	nResult = listen(ListenSocket, 5);
-	if (nResult == SOCKET_ERROR)
-	{
-		printf_s("ERROR::listen 실패\n");
-		closesocket(ListenSocket);
-		WSACleanup();
-		return false;
-	}
 
 	return true;
 }

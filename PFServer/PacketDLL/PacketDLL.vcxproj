@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="IOCPBase.cpp" />
     <ClCompile Include="MonsterVO.cpp" />
     <ClCompile Include="PlayerVO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IOCPBase.h" />
     <ClInclude Include="MonsterVO.h" />
     <ClInclude Include="PlayerVO.h" />
     <ClInclude Include="stdafx.h" />
