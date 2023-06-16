@@ -14,6 +14,13 @@
 #include <iostream>
 #include <string>
 
+#include <process.h>
+#include <sstream>
+#include <algorithm>
+#include <string>
+#include <cstdlib> //rand(), srand()
+#include <ctime> //time()
+
 
 using namespace std;
 
@@ -45,7 +52,6 @@ enum PACKETDLL_API EPacketType
 	SPAWN_MONSTER,
 	DESTROY_MONSTER,
 	DAMAGED_MONSTER,
-	UPDATE_MONSTER_INFO,
 	PACKET_TOT_AMOUNT
 };
 

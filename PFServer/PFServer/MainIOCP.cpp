@@ -1,5 +1,5 @@
 ﻿#include "MainIOCP.h"
-#include "PacketProcesses.h"
+
 #include <process.h>
 #include <sstream>
 #include <algorithm>
@@ -8,11 +8,9 @@
 #include <ctime> //time()
 
 // static 변수 설정
-map<int, SOCKET>	MainIOCP::SessionSocket;
 DataAccess			MainIOCP::Dao;
 CRITICAL_SECTION	MainIOCP::csPlayers;
 PlayerVO			MainIOCP::vo;
-CharacterInfo		MainIOCP::cInfo;
 
 
 unsigned int WINAPI CallWorkerThread(LPVOID p)
@@ -28,17 +26,16 @@ MainIOCP::MainIOCP()
 	InitializeCriticalSection(&csPlayers);
 
 	// 패킷 함수 포인터 배열 패킷별 함수 지정
-	fnProcess[EPacketType::LOGIN].funcProcessPacket = PacketProcesses::Login;
-	fnProcess[EPacketType::SEARCH_CHARACTER].funcProcessPacket = PacketProcesses::SearchCharacters;
-	fnProcess[EPacketType::LOGOUT].funcProcessPacket = PacketProcesses::Logout;
-	fnProcess[EPacketType::CREATE_CHARACTER].funcProcessPacket = PacketProcesses::CreateCharacter;
-	fnProcess[EPacketType::DELETE_CHARACTER].funcProcessPacket = PacketProcesses::DeleteCharacter;
-	fnProcess[EPacketType::ENROLL_PLAYER].funcProcessPacket = PacketProcesses::EnrollCharacter;
-	fnProcess[EPacketType::SEND_PLAYER].funcProcessPacket = PacketProcesses::SyncCharacters;
-	fnProcess[EPacketType::HIT_PLAYER].funcProcessPacket = PacketProcesses::HitCharacter;
+	fnProcess[EPacketType::LOGIN].funcProcessPacket = Login;
+	fnProcess[EPacketType::SEARCH_CHARACTER].funcProcessPacket = SearchCharacters;
+	fnProcess[EPacketType::CREATE_CHARACTER].funcProcessPacket = CreateCharacter;
+	fnProcess[EPacketType::DELETE_CHARACTER].funcProcessPacket = DeleteCharacter;
+	//fnProcess[EPacketType::LOGOUT].funcProcessPacket = Logout;
 
-	fnProcess[EPacketType::CHAT].funcProcessPacket = PacketProcesses::BroadcastChat;
-
+	//fnProcess[EPacketType::ENROLL_PLAYER].funcProcessPacket = PacketProcesses::EnrollCharacter;
+	//fnProcess[EPacketType::SEND_PLAYER].funcProcessPacket = PacketProcesses::SyncCharacters;
+	//fnProcess[EPacketType::HIT_PLAYER].funcProcessPacket = PacketProcesses::HitCharacter;
+	//fnProcess[EPacketType::CHAT].funcProcessPacket = PacketProcesses::BroadcastChat;
 }
 
 MainIOCP::~MainIOCP()
@@ -214,21 +211,6 @@ void MainIOCP::WorkerThread()
 	}
 }
 
-void MainIOCP::WriteCharactersInfoToSocket(stSOCKETINFO* pSocket)
-{
-	//왜인지 모르겠지만 잔여 데이터 때문에 클리어해줘야함
-	stringstream SendStream;
-	// 직렬화	
-	SendStream << EPacketType::RECV_PLAYER << endl;
-	SendStream << cInfo << endl;
-
-	// !!! 중요 !!! data.buf 에다 직접 데이터를 쓰면 쓰레기값이 전달될 수 있음
-	CopyMemory(pSocket->messageBuffer, (CHAR*)SendStream.str().c_str(), SendStream.str().length());
-	pSocket->dataBuf.buf = pSocket->messageBuffer;
-	pSocket->dataBuf.len = SendStream.str().length();
-
-}
-
 void MainIOCP::Send(stSOCKETINFO* pSocket)
 {
 	int nResult;
@@ -250,4 +232,117 @@ void MainIOCP::Send(stSOCKETINFO* pSocket)
 	{
 		printf_s("ERROR::WSASend 실패 : %d \n", WSAGetLastError());
 	}
+}
+
+
+void MainIOCP::Login(stringstream& RecvStream, stSOCKETINFO* pSocket)
+{
+	string Id;
+	string Pw;
+	RecvStream >> Id;
+	RecvStream >> Pw;
+
+	printf_s("INFO::로그인 시도 { %s }/{ %s }\n", Id.c_str(), Pw.c_str());
+
+	string user_seq = Dao.SearchAccount(Id, Pw);
+	stringstream SendStream;
+	SendStream << EPacketType::LOGIN << endl;
+
+	if (!user_seq.empty())
+	{
+		//printf_s("INFO::패킷 전송 : %d\n", SessionSocket.size());
+		printf_s("INFO::사용자 SEQ : %s\n", user_seq.c_str());
+		vo.USER_SEQ = user_seq;
+	}
+	else
+	{
+		user_seq = "error";
+	}
+	SendStream << user_seq << endl;
+
+	CopyMemory(pSocket->messageBuffer, (CHAR*)SendStream.str().c_str(), SendStream.str().length());
+	pSocket->dataBuf.buf = pSocket->messageBuffer;
+	pSocket->dataBuf.len = SendStream.str().length();
+
+	Send(pSocket);
+}
+
+void MainIOCP::SearchCharacters(stringstream& RecvStream, stSOCKETINFO* pSocket)
+{
+	string user_seq;
+	RecvStream >> user_seq;
+
+	printf_s("INFO::게임 사용자 SEQ { %s }\n", user_seq.c_str());
+
+	//사용자 조회
+	vector<map<string, string>> charList = Dao.SelectCharacterList(user_seq);
+
+	stringstream SendStream;
+	SendStream << EPacketType::SEARCH_CHARACTER << endl;
+	PlayerVO LocalVO;
+
+	for (auto info : charList)
+	{
+		vo = info;
+		LocalVO.SetCharacterListToStream(SendStream, vo);
+
+	}
+
+	SendStream << endl;
+
+	CopyMemory(pSocket->messageBuffer, (CHAR*)SendStream.str().c_str(), SendStream.str().length());
+	pSocket->dataBuf.buf = pSocket->messageBuffer;
+	pSocket->dataBuf.len = SendStream.str().length();
+
+	Send(pSocket);
+}
+
+void MainIOCP::CreateCharacter(stringstream& RecvStream, stSOCKETINFO* pSocket)
+{
+	string class_seq;
+	string char_nm;
+	RecvStream >> class_seq;
+	RecvStream >> char_nm;
+
+	PlayerVO vo;
+	
+	vo.USER_SEQ = vo.USER_SEQ;
+	vo.CLASS_SEQ = class_seq;
+	vo.CHAR_NM = char_nm;
+	printf_s("INFO::캐릭터 생성 USER_SEQ : { %s }\n", vo.USER_SEQ.c_str());
+
+	bool rslt = Dao.InsertCharacter(vo);
+
+	stringstream SendStream;
+	SendStream << EPacketType::CREATE_CHARACTER << endl;
+	SendStream << rslt << endl;
+
+	CopyMemory(pSocket->messageBuffer, (CHAR*)SendStream.str().c_str(), SendStream.str().length());
+	pSocket->dataBuf.buf = pSocket->messageBuffer;
+	pSocket->dataBuf.len = SendStream.str().length();
+
+	Send(pSocket);
+}
+
+void MainIOCP::DeleteCharacter(stringstream& RecvStream, stSOCKETINFO* pSocket)
+{
+	string char_seq;
+	RecvStream >> char_seq;
+	PlayerVO vo;
+	vo.USER_SEQ = vo.USER_SEQ;
+	vo.CHAR_SEQ = char_seq;
+
+	printf_s("INFO::캐릭터 삭제 USER_SEQ: { %s }, CHAR_SEQ: { %s }\n", vo.USER_SEQ.c_str(), char_seq.c_str());
+
+	bool rslt = Dao.DeleteCharacter(vo);
+
+	stringstream SendStream;
+	SendStream << EPacketType::DELETE_CHARACTER << endl;
+	SendStream << rslt << endl;
+
+	CopyMemory(pSocket->messageBuffer, (CHAR*)SendStream.str().c_str(), SendStream.str().length());
+	pSocket->dataBuf.buf = pSocket->messageBuffer;
+	pSocket->dataBuf.len = SendStream.str().length();
+
+	Send(pSocket);
 }

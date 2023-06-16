@@ -11,7 +11,7 @@ map<int, SOCKET>    MonsterIOCP::SessionSocket;		// 세션별 소켓 저장
 CRITICAL_SECTION	MonsterIOCP::csMonsters;		// CharactersInfo 임계영역
 CharacterInfo	 	MonsterIOCP::cInfo;				// 접속한 클라이언트의 정보를 저장	
 MonsterSet			MonsterIOCP::monInfo;			// 몬스터 정보 저장
-
+PacketProcess		MonsterIOCP::packetProc;		// 패킷을 처리하기 위한 클래스
 unsigned int WINAPI CallWorkerThread(LPVOID p)
 {
 	MonsterIOCP* pOverlappedEvent = (MonsterIOCP*)p;
@@ -177,18 +177,14 @@ void MonsterIOCP::WorkerThread()
 			RecvStream << pSocketInfo->dataBuf.buf;
 			RecvStream >> PacketType;
 
-			// 패킷 처리
-			if (PacketType > -1 && PacketType < EPacketType::PACKET_TOT_AMOUNT)
+			switch (PacketType)
 			{
-
-				if (nullptr != fnProcess[PacketType].funcProcessPacket)
-				{
-					fnProcess[PacketType].funcProcessPacket(RecvStream, pSocketInfo);
-				}
-				else
-				{
-					printf_s("ERROR::정의 되지 않은 패킷 : %d\n", PacketType);
-				}
+			case EPacketType::ENROLL_PLAYER:
+				packetProc.EnrollCharacter(RecvStream, pSocketInfo);
+				break;
+			default:
+				printf_s("ERROR::정의 되지 않은 패킷 : %d\n", PacketType);
+				break;
 			}
 		}
 		catch (const std::exception& e)
@@ -352,12 +348,6 @@ void MonsterIOCP::MonsterMainThread()
 			monster->MonsterCond = ECondition::IS_IDLE;
 		}
 	}
-
-	stringstream SendStream;
-	SendStream << EPacketType::UPDATE_MONSTER_INFO << endl;
-	SendStream << monInfo << endl;
-
-	Broadcast(SendStream);
 }
 
 void MonsterIOCP::Broadcast(stringstream& SendStream)
@@ -373,3 +363,19 @@ void MonsterIOCP::Broadcast(stringstream& SendStream)
 		Send(client);
 	}
 }
+
+
+//void MonsterIOCP::Logout(stringstream& RecvStream, stSOCKETINFO* pSocket)
+//{
+//	int SessionId;
+//	RecvStream >> SessionId;
+//	printf_s("INFO::(%d)로그아웃 요청 수신\n", SessionId);
+//	EnterCriticalSection(&csPlayers);
+//
+//	//잔여 플레이어 목록 배열에서 해당 SessionID키값에 해당하는 데이터를 지운다
+//	cInfo.players.erase(SessionId);
+//
+//	LeaveCriticalSection(&csPlayers);
+//	SessionSocket.erase(SessionId);
+//	printf_s("INFO::클라이언트 수 : %d\n", SessionSocket.size());
+//}

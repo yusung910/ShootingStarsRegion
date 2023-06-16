@@ -26,17 +26,22 @@ public:
 	// 클라이언트에게 송신
 	static void Send(stSOCKETINFO* pSocket);
 
-	static void WriteCharactersInfoToSocket(stSOCKETINFO* pSocket);
+	// 캐릭터 생성처리
+	static void CreateCharacter(stringstream& RecvStream, stSOCKETINFO* pSocket);
+
+	// 계정 로그인
+	static void Login(stringstream& RecvStream, stSOCKETINFO* pSocket);
+
+	// 캐릭터 목록 조회
+	static void SearchCharacters(stringstream& RecvStream, stSOCKETINFO* pSocket);
+
+	// 캐릭터 캐릭터 삭제처리
+	static void DeleteCharacter(stringstream& RecvStream, stSOCKETINFO* pSocket);
+
 private:
-
-	friend class PacketProcesses;
-
-	static CharacterInfo			cInfo;		// 접속한 클라이언트의 정보를 저장	
-	static map<int, SOCKET> SessionSocket;		// 세션별 소켓 저장
-	static float				 HitPoint;		// 타격 데미지
 	static PlayerVO					   vo;		// 캐릭터 정보
 	static DataAccess				  Dao;		// DataAccess 객체
 	static CRITICAL_SECTION		csPlayers;		// CharactersInfo 임계영역
 
-	FuncProcess		fnProcess[100];	// 패킷 처리 구조체
+	FuncProcess		fnProcess[EPacketType::PACKET_TOT_AMOUNT];	// 패킷 처리 구조체
 };

@@ -146,9 +146,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MonsterIOCP.cpp" />
+    <ClCompile Include="PacketProcess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MonsterIOCP.h" />
+    <ClInclude Include="PacketProcess.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

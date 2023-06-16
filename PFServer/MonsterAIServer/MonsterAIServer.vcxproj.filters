@@ -21,9 +21,15 @@
     <ClCompile Include="MonsterIOCP.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="PacketProcess.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MonsterIOCP.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketProcess.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,7 +2,7 @@
 #include "IOCPBase.h"
 #include "PlayerVO.h"
 #include "MonsterVO.h"
-
+#include "PacketProcess.h"
 //서버 포트
 #define SERVER_PORT		8001
 
@@ -39,6 +39,6 @@ private:
 	static MonsterSet			   monInfo;		// 몬스터 정보 저장
 	static CRITICAL_SECTION		csMonsters;		// CharactersInfo 임계영역
 
-	FuncProcess				fnProcess[100];		// 패킷 처리 구조체
+	static PacketProcess	    packetProc;		// 패킷 처리 클래스
 };
 
