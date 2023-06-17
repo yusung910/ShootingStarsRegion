@@ -34,7 +34,7 @@ void ACharManagementGMB::BeginPlay()
 
 	ShowErrorMsg(gi->InitSocket());
 
-	EServerStatusCode connectStatus = gi->Connect();
+	EServerStatusCode connectStatus = gi->Connect("127.0.0.1", 8000);
 	ShowErrorMsg(connectStatus);
 
 	if (connectStatus == EServerStatusCode::CONNECTED)

@@ -156,3 +156,6 @@ istream& operator>>(istream& stream, MonsterVO& info)
 
 	return stream;
 }
+
+
+

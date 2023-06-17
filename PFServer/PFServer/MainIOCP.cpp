@@ -9,7 +9,6 @@
 
 // static 변수 설정
 DataAccess			MainIOCP::Dao;
-CRITICAL_SECTION	MainIOCP::csPlayers;
 PlayerVO			MainIOCP::vo;
 
 
@@ -23,8 +22,6 @@ unsigned int WINAPI CallWorkerThread(LPVOID p)
 
 MainIOCP::MainIOCP()
 {
-	InitializeCriticalSection(&csPlayers);
-
 	// 패킷 함수 포인터 배열 패킷별 함수 지정
 	fnProcess[EPacketType::LOGIN].funcProcessPacket = Login;
 	fnProcess[EPacketType::SEARCH_CHARACTER].funcProcessPacket = SearchCharacters;
@@ -54,9 +51,6 @@ MainIOCP::~MainIOCP()
 		delete[] hWorkerHandle;
 		hWorkerHandle = NULL;
 	}
-
-	//임계영역 해제
-	DeleteCriticalSection(&csPlayers);
 }
 
 bool MainIOCP::Initialize()

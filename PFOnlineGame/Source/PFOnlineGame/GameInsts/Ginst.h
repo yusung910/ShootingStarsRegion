@@ -24,7 +24,7 @@ public:
 
 	EServerStatusCode InitSocket();
 
-	EServerStatusCode Connect();
+	EServerStatusCode Connect(const char* pszIP, int nPort);
 
 	EServerStatusCode Login(const FText& Id, const FText& Pw);
 

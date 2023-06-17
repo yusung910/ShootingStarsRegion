@@ -41,7 +41,6 @@ public:
 private:
 	static PlayerVO					   vo;		// 캐릭터 정보
 	static DataAccess				  Dao;		// DataAccess 객체
-	static CRITICAL_SECTION		csPlayers;		// CharactersInfo 임계영역
 
 	FuncProcess		fnProcess[EPacketType::PACKET_TOT_AMOUNT];	// 패킷 처리 구조체
 };

@@ -102,4 +102,59 @@ public:
 
 		return stream;
 	}
+
+	void InitializeMonsterSet()
+	{
+		printf_s("info::몬스터 생성\n");
+		srand((unsigned int)time(NULL));
+		
+		// 몬스터 초기화	
+		MonsterVO mFields;
+		
+		mFields.X = -2654;
+		mFields.Y = 3629;
+		mFields.Z = -461;
+		
+		mFields.ORI_X = -2654;
+		mFields.ORI_Y = 3629;
+		mFields.ORI_Z = -461;
+		
+		mFields.MAX_HP = 100.0f;
+		mFields.CUR_HP = 100.0f;
+		mFields.Id = rand();
+		mFields.Damage = 25.0f;
+		
+		monsters[mFields.Id] = mFields;
+		
+		mFields.X = -1374;
+		mFields.Y = 3629;
+		mFields.Z = -520;
+		
+		mFields.ORI_X = -1374;
+		mFields.ORI_Y = 3629;
+		mFields.ORI_Z = -520;
+		
+		mFields.Id = rand();
+		monsters[mFields.Id] = mFields;
+		
+		mFields.X = -724;
+		mFields.Y = 3629;
+		mFields.Z = -520;
+		
+		mFields.ORI_X = -724;
+		mFields.ORI_Y = 3629;
+		mFields.ORI_Z = -520;
+		mFields.Id = rand();
+		monsters[mFields.Id] = mFields;
+		
+		mFields.X = -830;
+		mFields.Y = 1710;
+		mFields.Z = -494;
+		
+		mFields.ORI_X = -1160;
+		mFields.ORI_Y = 1709;
+		mFields.ORI_Z = -410;
+		mFields.Id = rand();
+		monsters[mFields.Id] = mFields;
+	}
 };

@@ -19,15 +19,14 @@ void UGinst::Init()
 	Super::Init();
 }
 
-
 EServerStatusCode UGinst::InitSocket()
 {
 	Socket = CorrespondencePacket::GetSingleton();
 	return Socket->InitSocket(); 
 }
-EServerStatusCode UGinst::Connect()
+EServerStatusCode UGinst::Connect(const char* pszIP, int nPort)
 {
-	return Socket->Connect("127.0.0.1", 8000);
+	return Socket->Connect(pszIP, nPort);
 }
 
 EServerStatusCode UGinst::Login(const FText& Id, const FText& Pw)

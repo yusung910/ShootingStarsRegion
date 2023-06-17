@@ -150,7 +150,6 @@ void IOCPBase::Send(stSOCKETINFO* pSocket)
 void IOCPBase::Recv(stSOCKETINFO* pSocket)
 {
 	int nResult;
-	// DWORD	sendBytes;
 	DWORD	dwFlags = 0;
 
 	// stSOCKETINFO 데이터 초기화

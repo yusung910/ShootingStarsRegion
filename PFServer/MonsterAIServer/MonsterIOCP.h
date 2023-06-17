@@ -24,21 +24,23 @@ public:
 	// 클라이언트에게 송신
 	static void Send(stSOCKETINFO* pSocket);
 
-	static void WriteCharactersInfoToSocket(stSOCKETINFO* pSocket);
 
-	void InitializeMonsterSet();
+	//static void WriteCharactersInfoToSocket(stSOCKETINFO* pSocket);
+	//static void Broadcast(stringstream& SendStream);
+	//void InitializeMonsterSet();
+	//void MonsterMainThread();
 
-	void MonsterMainThread();
+protected:
 
-	void Broadcast(stringstream& SendStream);
 
 private:
-	static map<int, SOCKET>  SessionSocket;		// 세션별 소켓 저장
-	static CharacterInfo	 	     cInfo;		// 접속한 클라이언트의 정보를 저장	
-
-	static MonsterSet			   monInfo;		// 몬스터 정보 저장
-	static CRITICAL_SECTION		csMonsters;		// CharactersInfo 임계영역
-
 	static PacketProcess	    packetProc;		// 패킷 처리 클래스
+
+	//static map<int, SOCKET>  SessionSocket;		// 세션별 소켓 저장
+	//static CharacterInfo	 	     cInfo;		// 접속한 클라이언트의 정보를 저장	
+
+	//static MonsterSet			   monInfo;		// 몬스터 정보 저장
+	//static CRITICAL_SECTION	   criticalSec;		// CharactersInfo 임계영역
+
 };
 

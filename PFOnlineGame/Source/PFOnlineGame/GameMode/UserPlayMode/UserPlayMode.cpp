@@ -36,6 +36,7 @@ AUserPlayMode::AUserPlayMode()
 void AUserPlayMode::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 void AUserPlayMode::Tick(float DeltaTime)

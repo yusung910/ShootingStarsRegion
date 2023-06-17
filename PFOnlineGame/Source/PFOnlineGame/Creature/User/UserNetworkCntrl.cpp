@@ -99,7 +99,8 @@ void AUserNetworkCntrl::BeginPlay()
 	MainGmode = Cast<AMainGMB>(gmode);
 	gi = Cast<UGinst>(UGameplayStatics::GetGameInstance(GetWorld()));
 	gi->InitSocket();
-	isServerConnected = gi->Connect();
+	//몬스터 서버 접속
+	isServerConnected = gi->Connect("127.0.0.1", 8001);
 
 	if (MainGmode->CheckUpServerCorrespondenceStatus(isServerConnected))
 	{
@@ -270,7 +271,7 @@ bool AUserNetworkCntrl::UpdateWorldInfo()
 
 	for (auto info : OtherInfos->Players)
 	{
-		//LOG_SCREEN_T("USER : %d", info.second.SessionID);
+		LOG_SCREEN_T("USER cond : %d", info.second.PlayerCond);
 	}
 
 	// 다른 플레이어 업데이트

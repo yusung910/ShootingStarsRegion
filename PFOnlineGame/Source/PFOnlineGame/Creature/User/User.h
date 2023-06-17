@@ -65,7 +65,7 @@ private:
 
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "weapon", meta = (AllowPrivateAccess = "true"))
-		ASword* sword;
+		class ASword* sword;
 
 	//플레이어 정보가 담긴 포인터 변수
 	PlayerVO pVO;

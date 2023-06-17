@@ -4,17 +4,16 @@ E:\ShootingStarsRegion\PFServer\PacketDLL\IOCPBase.cpp(104,50): warning C4302: '
   MonsterVO.cpp
 E:\ShootingStarsRegion\PFServer\PacketDLL\MonsterVO.h(73,22): warning C4251: 'MonsterSet::monsters': class 'std::map<int,MonsterVO,std::less<int>,std::allocator<std::pair<const int,MonsterVO>>>'에서는 class 'MonsterSet'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
 E:\ShootingStarsRegion\PFServer\PacketDLL\MonsterVO.h(73): message : 'std::map<int,MonsterVO,std::less<int>,std::allocator<std::pair<const int,MonsterVO>>>' 선언을 참조하십시오.
-E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(69,21): warning C4251: 'CharacterInfo::players': class 'std::map<int,PlayerVO,std::less<int>,std::allocator<std::pair<const int,PlayerVO>>>'에서는 class 'CharacterInfo'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(70,21): warning C4251: 'CharacterInfo::players': class 'std::map<int,PlayerVO,std::less<int>,std::allocator<std::pair<const int,PlayerVO>>>'에서는 class 'CharacterInfo'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
 E:\ShootingStarsRegion\PFServer\PacketDLL\MonsterVO.h(27): message : 'std::map<int,PlayerVO,std::less<int>,std::allocator<std::pair<const int,PlayerVO>>>' 선언을 참조하십시오.
-E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(70,26): warning C4251: 'CharacterInfo::PlayerLocs': class 'std::map<int,std::vector<float,std::allocator<float>>,std::less<int>,std::allocator<std::pair<const int,std::vector<float,std::allocator<float>>>>>'에서는 class 'CharacterInfo'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
-E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(70): message : 'std::map<int,std::vector<float,std::allocator<float>>,std::less<int>,std::allocator<std::pair<const int,std::vector<float,std::allocator<float>>>>>' 선언을 참조하십시오.
+E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(71,26): warning C4251: 'CharacterInfo::PlayerLocs': class 'std::map<int,std::vector<float,std::allocator<float>>,std::less<int>,std::allocator<std::pair<const int,std::vector<float,std::allocator<float>>>>>'에서는 class 'CharacterInfo'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(71): message : 'std::map<int,std::vector<float,std::allocator<float>>,std::less<int>,std::allocator<std::pair<const int,std::vector<float,std::allocator<float>>>>>' 선언을 참조하십시오.
   PlayerVO.cpp
-E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(69,21): warning C4251: 'CharacterInfo::players': class 'std::map<int,PlayerVO,std::less<int>,std::allocator<std::pair<const int,PlayerVO>>>'에서는 class 'CharacterInfo'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
-E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(69): message : 'std::map<int,PlayerVO,std::less<int>,std::allocator<std::pair<const int,PlayerVO>>>' 선언을 참조하십시오.
-E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(70,26): warning C4251: 'CharacterInfo::PlayerLocs': class 'std::map<int,std::vector<float,std::allocator<float>>,std::less<int>,std::allocator<std::pair<const int,std::vector<float,std::allocator<float>>>>>'에서는 class 'CharacterInfo'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
-E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(70): message : 'std::map<int,std::vector<float,std::allocator<float>>,std::less<int>,std::allocator<std::pair<const int,std::vector<float,std::allocator<float>>>>>' 선언을 참조하십시오.
+E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(70,21): warning C4251: 'CharacterInfo::players': class 'std::map<int,PlayerVO,std::less<int>,std::allocator<std::pair<const int,PlayerVO>>>'에서는 class 'CharacterInfo'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(70): message : 'std::map<int,PlayerVO,std::less<int>,std::allocator<std::pair<const int,PlayerVO>>>' 선언을 참조하십시오.
+E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(71,26): warning C4251: 'CharacterInfo::PlayerLocs': class 'std::map<int,std::vector<float,std::allocator<float>>,std::less<int>,std::allocator<std::pair<const int,std::vector<float,std::allocator<float>>>>>'에서는 class 'CharacterInfo'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.h(71): message : 'std::map<int,std::vector<float,std::allocator<float>>,std::less<int>,std::allocator<std::pair<const int,std::vector<float,std::allocator<float>>>>>' 선언을 참조하십시오.
 E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.cpp(44,16): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 E:\ShootingStarsRegion\PFServer\PacketDLL\PlayerVO.cpp(45,16): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다...
-     E:\ShootingStarsRegion\PFServer\PFServer\x64\Debug\PacketDLL.lib 라이브러리 및 E:\ShootingStarsRegion\PFServer\PFServer\x64\Debug\PacketDLL.exp 개체를 생성하고 있습니다.
   PacketDLL.vcxproj -> E:\ShootingStarsRegion\PFServer\PFServer\x64\Debug\PacketDLL.dll
