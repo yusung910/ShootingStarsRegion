@@ -30,9 +30,7 @@ public:
 
 	MonsterSet* SendMonsterSet();
 
-	void RecvSpawnMonster(MonsterVO* _MonVO);
-
-	void RecvDestroyMonster(MonsterVO* _MonVO);
+	void RecvSpawnMonster(MonsterSet* monsterSet);
 
 	void SendPlayerInfo();
 
@@ -42,7 +40,7 @@ public:
 
 	void UpdatePlayerInfo(const PlayerVO& vo);
 
-	void DestroyMonster();
+	void SpawnMonsters();
 
 	void UpdateMonsterSet();
 
@@ -81,8 +79,6 @@ protected:
 
 	//몬스터 생성
 	bool isSpawnMonster;
-	//몬스터 제거
-	bool isDestroyMonster;
 
 	CharacterInfo* OtherInfos; //다른 캐릭터 정보
 	PlayerVO* pVO;	//서버에서 받아오는 캐릭터 정보
@@ -113,7 +109,7 @@ protected:
 	UPROPERTY()
 		class AMainGMB* MainGmode;
 
-	//소환된 몬스터를 저장
-	TArray<AActor*> SpawnedMonsters;
+	////소환된 몬스터를 저장
+	//TArray<AActor*> SpawnedMonsters;
 
 };

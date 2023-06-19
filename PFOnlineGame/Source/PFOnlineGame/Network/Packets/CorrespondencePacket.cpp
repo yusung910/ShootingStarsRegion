@@ -250,6 +250,7 @@ EServerStatusCode CorrespondencePacket::HitMonster(MonsterVO monsVO)
 	stringstream SendStream;
 	// 요청 종류
 	SendStream << EPacketType::HIT_MONSTER << endl;
+
 	SendStream << monsVO;
 
 	// 피격 정보 전송

@@ -48,6 +48,9 @@ protected:
 	UPROPERTY()
 		TSubclassOf<UAnimInstance> anim;
 
+	UPROPERTY()
+		class AUserPlayMode* upGameMode;
+
 	//다른 캐릭터들(몬스터, 유저 등)에게 가할 데미지
 	float DAMAGE;
 

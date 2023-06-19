@@ -159,7 +159,6 @@ void AUserCntrl::ShowMonsterInfo()
 		{
 			aClickedMonster = hitInfo.GetActor();
 			gmode->ShowMonsterHPBar(true);
-
 		}
 		else
 		{

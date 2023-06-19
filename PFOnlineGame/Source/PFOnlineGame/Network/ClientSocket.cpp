@@ -226,8 +226,8 @@ uint32 ClientSocket::Run()
 			case EPacketType::SYNC_MONSTER:
 				userNetworkCntrl->RecvMonsterSet(RecvMonsterSet(RecvStream));
 				break;
-			case EPacketType::DESTROY_MONSTER:
-				userNetworkCntrl->RecvDestroyMonster(RecvMonster(RecvStream));
+			case EPacketType::SPAWN_MONSTER:
+				userNetworkCntrl->RecvSpawnMonster(RecvMonsterSet(RecvStream));
 				break;
 			case EPacketType::DAMAGED_MONSTER:
 				userNetworkCntrl->RecvSyncMonster(RecvMonster(RecvStream));

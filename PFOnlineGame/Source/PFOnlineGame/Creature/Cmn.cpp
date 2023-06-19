@@ -1,12 +1,15 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 #include "PFOnlineGame.h"
 
+#include "Animation/AnimInstance.h"
+
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 
 #include "Particles/ParticleSystemComponent.h"
-#include "Animation/AnimInstance.h"
+
+#include "UserPlayMode.h"
 
 #include "Ginst.h"
 
@@ -39,6 +42,9 @@ void ACmn::BeginPlay()
 
 	//게임 인스턴스 세팅
 	gi = Cast<UGinst>(GetWorld()->GetGameInstance());
+
+	//게임모드
+	upGameMode = Cast<AUserPlayMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
 // Called every frame

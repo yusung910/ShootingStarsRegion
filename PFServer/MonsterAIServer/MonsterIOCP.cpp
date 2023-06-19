@@ -131,6 +131,7 @@ void MonsterIOCP::WorkerThread()
 	//초기 몬스터 세팅
 	while (bWorkerThread)
 	{
+
 		/**
 		 * 이 함수로 인해 쓰레드들은 WaitingThread Queue 에 대기상태로 들어가게 됨
 		 * 완료된 Overlapped I/O 작업이 발생하면 IOCP Queue 에서 완료된 작업을 가져와
@@ -178,10 +179,17 @@ void MonsterIOCP::WorkerThread()
 			case EPacketType::ENROLL_PLAYER:
 				packetProc.EnrollCharacter(ReceiveStream, pSocketInfo);
 				break;
-			
 			case EPacketType::SEND_PLAYER:
 				packetProc.ReceiveCharacter(ReceiveStream, pSocketInfo);
 				break;
+			case EPacketType::HIT_MONSTER:
+				packetProc.HitMonster(ReceiveStream, pSocketInfo);
+				break;
+			case EPacketType::HIT_PLAYER:
+				packetProc.HitPlayer(ReceiveStream, pSocketInfo);
+				break;
+			case EPacketType::LOGOUT:
+				packetProc.Logout(ReceiveStream, pSocketInfo);
 			default:
 				printf_s("ERROR::정의 되지 않은 패킷 : %d\n", nPacketCode);
 				break;
@@ -218,95 +226,3 @@ void MonsterIOCP::Send(stSOCKETINFO* pSocket)
 		printf_s("ERROR::WSASend 실패 : %d \n", WSAGetLastError());
 	}
 }
-
-//void MonsterIOCP::MonsterMainThread()
-//{
-//	//몬스터 리젠 여부
-//	bool bIsMonsterRespawn = true;
-//	//기본 딜레이
-//
-//	//몬스터 전부가 죽었는지
-//	int nMonsterAliveCount = monInfo.monsters.size();
-//
-//	printf_s("info::잔여 몬스터 수 : %d\n", nMonsterAliveCount);
-//
-//	//몬스터 근처에 유저가 있는지 판별
-//	for (auto& kvp : monInfo.monsters)
-//	{
-//		auto& monMap = kvp.second;
-//		MonsterVO* monster = &monInfo.monsters[monMap.Id];
-//
-//		//접속한 플레이어가 없거나 몬스터가 죽었을 경우 실행하지 않는다.
-//		if (cInfo.players.size() <= 0 || !monster->IsAlive())
-//			continue;
-//
-//		monster->SetPlayerInTrackingInfo(cInfo.players);
-//	}
-//
-//	for (auto& monMap : monInfo.monsters)
-//	{
-//		auto& mon = monMap.second;
-//		MonsterVO* monster = &monInfo.monsters[mon.Id];
-//
-//		if (monster->isPlayerInTraceRange)
-//		{
-//			if (monster->isPlayerInHitRange)
-//			{
-//				if (monster->MonsterCond == ECondition::IS_ATTACK)
-//				{
-//					monster->MonsterCond = ECondition::IS_IDLE;
-//				}
-//				else
-//				{
-//					monster->MonsterCond = ECondition::IS_ATTACK;
-//				}
-//			}
-//
-//			if (monster->MonsterCond == ECondition::IS_IDLE)
-//			{
-//				monster->MonsterCond = ECondition::IS_MOVE;
-//				monster->ChangeLocToDestLoc();
-//			}
-//		}
-//		else if (!monster->isPlayerInTraceRange &&
-//			!monster->IsOriginPosition())
-//		{
-//			monster->MoveOri();
-//			monster->MonsterCond = ECondition::IS_MOVE;
-//		}
-//		else
-//		{
-//			monster->MonsterCond = ECondition::IS_IDLE;
-//		}
-//	}
-//}
-
-//void MonsterIOCP::Broadcast(stringstream& SendStream)
-//{
-//	stSOCKETINFO* client = new stSOCKETINFO;
-//	for (const auto& kvp : SessionSocket)
-//	{
-//		client->socket = kvp.second;
-//		CopyMemory(client->messageBuffer, (CHAR*)SendStream.str().c_str(), SendStream.str().length());
-//		client->dataBuf.buf = client->messageBuffer;
-//		client->dataBuf.len = SendStream.str().length();
-//
-//		Send(client);
-//	}
-//}
-
-
-//void MonsterIOCP::Logout(stringstream& RecvStream, stSOCKETINFO* pSocket)
-//{
-//	int SessionId;
-//	RecvStream >> SessionId;
-//	printf_s("INFO::(%d)로그아웃 요청 수신\n", SessionId);
-//	EnterCriticalSection(&csPlayers);
-//
-//	//잔여 플레이어 목록 배열에서 해당 SessionID키값에 해당하는 데이터를 지운다
-//	cInfo.players.erase(SessionId);
-//
-//	LeaveCriticalSection(&csPlayers);
-//	SessionSocket.erase(SessionId);
-//	printf_s("INFO::클라이언트 수 : %d\n", SessionSocket.size());
-//}

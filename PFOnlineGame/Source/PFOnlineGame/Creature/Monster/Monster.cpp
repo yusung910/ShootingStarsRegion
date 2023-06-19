@@ -33,59 +33,48 @@ AMonster::AMonster()
 	//기본 공격 몽타주
 	GetObjectAsset(BasicAttackMontage, UAnimMontage, "AnimMontage'/Game/Blueprints/Montage/Monster/Attack/Monster_Attack_Montage.Monster_Attack_Montage'");
 
-	bDeadDelayFlag = false;
-	fDeadDelayCount = 0.0f;
+	isAttack = false;
 }
 
-void AMonster::SetMonsterVO(MonsterVO* _monVO)
+void AMonster::ToMovingAndAttack(FVector dest, FVector ori)
 {
-	monVO.X = _monVO->X;
-	monVO.Y = _monVO->Y;
-	monVO.Z = _monVO->Z;
-	monVO.Id = _monVO->Id;
+	float distToDest = UKismetMathLibrary::Vector_Distance(GetActorLocation(), dest);
 
-	monVO.CUR_HP = _monVO->CUR_HP;
-	monVO.MAX_HP = _monVO->MAX_HP;
+	if (distToDest <= monVO.TraceRange)
+	{
+		float yaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), dest).Yaw;
 
-	monVO.MonsterCond = _monVO->MonsterCond;
+		SetActorRotation(FRotator(0, yaw, 0));
+	}
 
-	monVO.Damage = _monVO->Damage;
-	monVO.HitRange = _monVO->HitRange;
-}
+	if (distToDest >= monVO.HitRange && distToDest <= monVO.TraceRange)
+	{
+		FVector tmp = (distToDest >= (monVO.HitRange * 2)) ? ori : dest;
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(), tmp);
+	}
 
-void AMonster::MoveToLocation(FVector dest)
-{
-	float yaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), dest).Yaw;
+	if (distToDest <= monVO.HitRange)
+	{
+		Attack();
+	}
 
-	SetActorRotation(FRotator(0, yaw, 0));
-
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(), dest);
 }
 
 void AMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	if (bDeadDelayFlag)
-	{
-		fDeadDelayCount += DeltaTime;
-		if (fDeadDelayCount >= 1.0f)
-		{
-			Destroy();
-			bDeadDelayFlag = false;
-		}
-	}
+
 }
 
 void AMonster::Attack()
 {
 	Super::Attack();
 
-	float yaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), AttackTargetLoc).Yaw;
-
-	SetActorRotation(FRotator(0, yaw, 0));
-
-	PlayAnimMontage(BasicAttackMontage, 1.5, "a1_1");
+	if (!isAttack)
+	{
+		isAttack = true;
+		PlayAnimMontage(BasicAttackMontage, 1.5, "a1_1");
+	}
 }
 
 void AMonster::SendDamage()
@@ -96,7 +85,7 @@ void AMonster::SendDamage()
 void AMonster::Dead()
 {
 	Super::Dead();
-	bDeadDelayFlag = true;
+	K2_DestroyActor();
 }
 
 float AMonster::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -104,7 +93,7 @@ float AMonster::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, 
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	monVO.BeDamageAmount = DamageAmount;
-	
+	//피격 패킷 전송
 	gi->HitMonster(monVO);
 
 	return DamageAmount;

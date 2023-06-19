@@ -26,11 +26,6 @@ public:
 	// 추격범위에 있는 가장 가까운 플레이어를 확인하고 관련 데이터를 세팅
 	PACKETDLL_API void SetPlayerInTrackingInfo(const map<int, PlayerVO> players);
 
-	// 위치 설정
-	PACKETDLL_API void SetLocation(float x, float y, float z);
-
-	// 목적지 위치를 현재 위치로 변경
-	PACKETDLL_API void ChangeLocToDestLoc();
 
 	PACKETDLL_API friend ostream& operator<<(ostream& stream, MonsterVO& info);
 
@@ -53,108 +48,22 @@ public:
 	//피해 입은 데미지
 	float BeDamageAmount;
 
-	//
-	bool isPlayerInTraceRange;
-	//
-	double TrackReqSec;
-	//
-	bool isPlayerInHitRange;
-
 	ECondition MonsterCond;
-
 private:
 
 };
 
 
-class PACKETDLL_API MonsterSet
+class  MonsterSet
 {
 public:
 	map<int, MonsterVO> monsters;
 
-	PACKETDLL_API friend ostream& operator<<(ostream& stream, MonsterSet& info)
-	{
-		stream << info.monsters.size() << endl;
-		for (auto& kvp : info.monsters)
-		{
-			stream << kvp.first << endl;
-			stream << kvp.second << endl;
-		}
 
-		return stream;
-	}
+	PACKETDLL_API void InitializeMonsterSet();
+	//플레이어 목록을 인자값으로 전달 받아서, 상태를 결정한다.
+	PACKETDLL_API void SetMonstersCondition(map<int, PlayerVO> players);
 
-	PACKETDLL_API friend istream& operator>>(istream& stream, MonsterSet& info)
-	{
-		int nMonsters = 0;
-		int PrimaryId = 0;
-		MonsterVO monster;
-		info.monsters.clear();
-
-		stream >> nMonsters;
-		for (int i = 0; i < nMonsters; i++)
-		{
-			stream >> PrimaryId;
-			stream >> monster;
-			//info.monsters.insert(pair<int, MonsterVO>(PrimaryId, monster));
-			info.monsters[PrimaryId] = monster;
-		}
-
-		return stream;
-	}
-
-	void InitializeMonsterSet()
-	{
-		printf_s("info::몬스터 생성\n");
-		srand((unsigned int)time(NULL));
-		
-		// 몬스터 초기화	
-		MonsterVO mFields;
-		
-		mFields.X = -2654;
-		mFields.Y = 3629;
-		mFields.Z = -461;
-		
-		mFields.ORI_X = -2654;
-		mFields.ORI_Y = 3629;
-		mFields.ORI_Z = -461;
-		
-		mFields.MAX_HP = 100.0f;
-		mFields.CUR_HP = 100.0f;
-		mFields.Id = rand();
-		mFields.Damage = 25.0f;
-		
-		monsters[mFields.Id] = mFields;
-		
-		mFields.X = -1374;
-		mFields.Y = 3629;
-		mFields.Z = -520;
-		
-		mFields.ORI_X = -1374;
-		mFields.ORI_Y = 3629;
-		mFields.ORI_Z = -520;
-		
-		mFields.Id = rand();
-		monsters[mFields.Id] = mFields;
-		
-		mFields.X = -724;
-		mFields.Y = 3629;
-		mFields.Z = -520;
-		
-		mFields.ORI_X = -724;
-		mFields.ORI_Y = 3629;
-		mFields.ORI_Z = -520;
-		mFields.Id = rand();
-		monsters[mFields.Id] = mFields;
-		
-		mFields.X = -830;
-		mFields.Y = 1710;
-		mFields.Z = -494;
-		
-		mFields.ORI_X = -1160;
-		mFields.ORI_Y = 1709;
-		mFields.ORI_Z = -410;
-		mFields.Id = rand();
-		monsters[mFields.Id] = mFields;
-	}
+	PACKETDLL_API friend ostream& operator<<(ostream& stream, MonsterSet& info);
+	PACKETDLL_API friend istream& operator>>(istream& stream, MonsterSet& info);
 };

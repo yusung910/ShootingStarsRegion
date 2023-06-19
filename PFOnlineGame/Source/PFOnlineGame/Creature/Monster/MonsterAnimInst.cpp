@@ -32,5 +32,5 @@ void UMonsterAnimInst::AnimNotify_Damage()
 void UMonsterAnimInst::AnimNotify_EndAttack()
 {
 	if (!IsValid(monster)) return;
-	monster->SetMonsterCond(ECondition::IS_IDLE);
+	monster->SetIsAttack(false);
 }

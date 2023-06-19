@@ -7,8 +7,7 @@ MonsterVO::MonsterVO()
 	ORI_X(0), ORI_Y(0), ORI_Z(0),
 	DEST_X(0), DEST_Y(0), DEST_Z(0),
 	CUR_HP(0), MAX_HP(0),
-	Id(-1),
-	Velocity(600), isPlayerInTraceRange(false),
+	Id(-1), Velocity(600),
 	TraceRange(700), HitRange(200), Damage(5), HP_Ratio(1)
 {
 	MonsterCond = ECondition::IS_IDLE;
@@ -27,9 +26,9 @@ void MonsterVO::SetDestLoc(PlayerVO vo)
 
 void MonsterVO::MoveOri()
 {
-	X = ORI_X;
-	Y = ORI_Y;
-	Z = ORI_Z;
+	DEST_X = ORI_X;
+	DEST_Y = ORI_Y;
+	DEST_Z = ORI_Z;
 }
 
 bool MonsterVO::IsOriginPosition()
@@ -40,7 +39,7 @@ void MonsterVO::Damaged(float dmg)
 {
 	CUR_HP -= dmg;
 	HP_Ratio = CUR_HP / MAX_HP;
-	printf_s("[Battle Info] Hit! 남은 체력 : %f\n", CUR_HP);
+
 }
 
 bool MonsterVO::IsAlive()
@@ -68,32 +67,12 @@ void MonsterVO::SetPlayerInTrackingInfo(const map<int, PlayerVO> players)
 		PlayerVO tmpPvo = p.second;
 		double tmpDist = sqrt(pow(tmpPvo.X - X, 2) + pow(tmpPvo.Y - Y, 2) + pow(tmpPvo.Z - Z, 2));
 		TargetDists.insert(pair<double, PlayerVO>(tmpDist, tmpPvo));
+
+		//printf_s("Monster[%d] to Player[%d] Dist : %f\n", Id, tmpPvo.SessionID,tmpDist);
 	}
 
 	map< double, PlayerVO >::iterator it = TargetDists.begin();
-	//목표 좌표
 	SetDestLoc(it->second);
-
-	isPlayerInTraceRange = (it->first <= TraceRange);
-	isPlayerInHitRange = (it->first <= HitRange);
-
-	TrackReqSec = (it->first / Velocity) * 1000;
-}
-
-
-void MonsterVO::SetLocation(float x, float y, float z)
-{
-	X = x;
-	Y = y;
-	Z = z;
-}
-
-
-void MonsterVO::ChangeLocToDestLoc()
-{
-	X = DEST_X;
-	Y = DEST_Y;
-	Z = DEST_Z;
 }
 
 ostream& operator<<(ostream& stream, MonsterVO& info)
@@ -109,6 +88,8 @@ ostream& operator<<(ostream& stream, MonsterVO& info)
 	stream << info.DEST_X << endl;
 	stream << info.DEST_Y << endl;
 	stream << info.DEST_Z << endl;
+
+	stream << info.TraceRange << endl;
 
 	stream << info.CUR_HP << endl;
 	stream << info.MAX_HP << endl;
@@ -140,6 +121,8 @@ istream& operator>>(istream& stream, MonsterVO& info)
 	stream >> info.DEST_Y;
 	stream >> info.DEST_Z;
 
+	stream >> info.TraceRange;
+
 	stream >> info.CUR_HP;
 	stream >> info.MAX_HP;
 	stream >> info.HP_Ratio;
@@ -158,4 +141,148 @@ istream& operator>>(istream& stream, MonsterVO& info)
 }
 
 
+/*
+* monster set
+*/
+ostream& operator<<(ostream& stream, MonsterSet& info)
+{
+	stream << info.monsters.size() << endl;
+	for (auto& kvp : info.monsters)
+	{
+		stream << kvp.first << endl;
+		stream << kvp.second << endl;
+	}
 
+	return stream;
+}
+
+
+istream& operator>>(istream& stream, MonsterSet& info)
+{
+	int nMonsters = 0;
+	int PrimaryId = 0;
+	MonsterVO monster;
+	info.monsters.clear();
+
+	stream >> nMonsters;
+	for (int i = 0; i < nMonsters; i++)
+	{
+		stream >> PrimaryId;
+		stream >> monster;
+		info.monsters[PrimaryId] = monster;
+	}
+
+	return stream;
+}
+
+
+
+void MonsterSet::InitializeMonsterSet()
+{
+	printf_s("info::몬스터 생성\n");
+	srand((unsigned int)time(NULL));
+
+	// 몬스터 초기화	
+	MonsterVO mFields;
+
+	mFields.X = -2654;
+	mFields.Y = 3629;
+	mFields.Z = -461;
+
+	mFields.ORI_X = -2654;
+	mFields.ORI_Y = 3629;
+	mFields.ORI_Z = -461;
+
+	mFields.MAX_HP = 100.0f;
+	mFields.CUR_HP = 100.0f;
+	mFields.Id = rand();
+	mFields.Damage = 1.0f;
+
+	monsters[mFields.Id] = mFields;
+
+	mFields.X = -1374;
+	mFields.Y = 3629;
+	mFields.Z = -520;
+
+	mFields.ORI_X = -1374;
+	mFields.ORI_Y = 3629;
+	mFields.ORI_Z = -520;
+
+	mFields.Id = rand();
+	monsters[mFields.Id] = mFields;
+
+	mFields.X = -724;
+	mFields.Y = 3629;
+	mFields.Z = -520;
+
+	mFields.ORI_X = -724;
+	mFields.ORI_Y = 3629;
+	mFields.ORI_Z = -520;
+	mFields.Id = rand();
+	monsters[mFields.Id] = mFields;
+
+	mFields.X = -830;
+	mFields.Y = 1710;
+	mFields.Z = -494;
+
+	mFields.ORI_X = -1160;
+	mFields.ORI_Y = 1709;
+	mFields.ORI_Z = -410;
+	mFields.Id = rand();
+	monsters[mFields.Id] = mFields;
+}
+
+void MonsterSet::SetMonstersCondition(map<int, PlayerVO> players)
+{
+	//몬스터가 사망이였을 경우
+
+	//몬스터 근처에 유저가 있는지 판별
+	for (auto& kvp : monsters)
+	{
+		auto& monMap = kvp.second;
+		MonsterVO* monster = &monsters[monMap.Id];
+
+		//접속한 플레이어가 없거나 몬스터가 죽었을 경우 실행하지 않는다.
+		if (players.size() <= 0 || !monster->IsAlive())
+			continue;
+
+		monster->SetPlayerInTrackingInfo(players);
+	}
+
+	//for (auto& monMap : monsters)
+	//{
+	//	auto& mon = monMap.second;
+	//	MonsterVO* monster = &monsters[mon.Id];
+
+	//	if (monster->isPlayerInTraceRange)
+	//	{
+	//		if (monster->isPlayerInHitRange)
+	//		{
+	//			//if (monster->MonsterCond == ECondition::IS_ATTACK)
+	//			//{
+	//			//	monster->MonsterCond = ECondition::IS_IDLE;
+	//			//}
+	//			//else
+	//			//{
+	//				monster->MonsterCond = ECondition::IS_ATTACK;
+	//			//}
+	//		}
+
+	//		if (monster->MonsterCond == ECondition::IS_IDLE)
+	//		{
+	//			monster->MonsterCond = ECondition::IS_MOVE;
+	//			monster->ChangeLocToDestLoc();
+	//		}
+	//	}
+	//	else if (!monster->isPlayerInTraceRange &&
+	//		!monster->IsOriginPosition())
+	//	{
+	//		monster->MoveOri();
+	//		monster->MonsterCond = ECondition::IS_MOVE;
+	//	}
+	//	else
+	//	{
+	//		monster->MonsterCond = ECondition::IS_IDLE;
+	//	}
+	//}
+}

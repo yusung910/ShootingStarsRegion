@@ -41,6 +41,8 @@ DECLARE_LOG_CATEGORY_EXTERN(DevLog, Log, All);
 // null체크
 #define IS_NULL(p) { if(p == nullptr) {LOG(Error, "Object is Null : %s", "'"#p"'"); return ; } }
 
+#define IS_NULL_FALSE(p) { if(p == nullptr) {LOG(Error, "Object is Null : %s", "'"#p"'"); return false; } }
+
 /*    Object Asset을 받습니다.
 *    생성자 타임에만 작동합니다.
 *    RETURN_POINTER : 받을 포인터

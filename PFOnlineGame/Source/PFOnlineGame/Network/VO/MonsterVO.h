@@ -26,6 +26,8 @@ public:
 	void SetMonsterPosition(FVector loc);
 
 	friend ostream& operator<<(ostream& stream, MonsterVO& info);
+	friend ostream& operator<<(ostream& stream, MonsterVO* info);
+
 	friend istream& operator>>(istream& stream, MonsterVO& info);
 
 	friend MonsterVO operator<<(MonsterVO dest, MonsterVO* target);

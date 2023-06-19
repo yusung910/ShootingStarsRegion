@@ -16,8 +16,6 @@ void MonsterVO::SetMonsterPosition(FVector loc)
 	Z = loc.Z;
 }
 
-
-
 ostream& operator<<(ostream& stream, MonsterVO& info)
 {
 	stream << info.X << endl;
@@ -31,6 +29,8 @@ ostream& operator<<(ostream& stream, MonsterVO& info)
 	stream << info.DEST_X << endl;
 	stream << info.DEST_Y << endl;
 	stream << info.DEST_Z << endl;
+
+	stream << info.TraceRange << endl;
 
 	stream << info.CUR_HP << endl;
 	stream << info.MAX_HP << endl;
@@ -48,6 +48,38 @@ ostream& operator<<(ostream& stream, MonsterVO& info)
 	return stream;
 }
 
+ostream& operator<<(ostream& stream, MonsterVO* info)
+{
+	stream << info->X << endl;
+	stream << info->Y << endl;
+	stream << info->Z << endl;
+
+	stream << info->ORI_X << endl;
+	stream << info->ORI_Y << endl;
+	stream << info->ORI_Z << endl;
+
+	stream << info->DEST_X << endl;
+	stream << info->DEST_Y << endl;
+	stream << info->DEST_Z << endl;
+
+	stream << info->TraceRange << endl;
+
+	stream << info->CUR_HP << endl;
+	stream << info->MAX_HP << endl;
+	stream << info->HP_Ratio << endl;
+
+	stream << info->Id << endl;
+
+	stream << info->Damage << endl;
+	stream << info->BeDamageAmount << endl;
+
+	stream << info->HitRange << endl;
+
+	stream << (int)info->MonsterCond << endl;
+
+	return stream;
+}
+
 istream& operator>>(istream& stream, MonsterVO& info)
 {
 	stream >> info.X;
@@ -61,6 +93,8 @@ istream& operator>>(istream& stream, MonsterVO& info)
 	stream >> info.DEST_X;
 	stream >> info.DEST_Y;
 	stream >> info.DEST_Z;
+
+	stream >> info.TraceRange;
 
 	stream >> info.CUR_HP;
 	stream >> info.MAX_HP;
@@ -88,6 +122,10 @@ MonsterVO operator<<(MonsterVO dest, MonsterVO* target)
 	dest.ORI_Y = target->ORI_Y;
 	dest.ORI_Z = target->ORI_Z;
 
+	dest.DEST_X = target->DEST_X;
+	dest.DEST_Y = target->DEST_Y;
+	dest.DEST_Z = target->DEST_Z;
+
 	dest.Id = target->Id;
 
 	dest.CUR_HP = target->CUR_HP;
@@ -110,6 +148,10 @@ MonsterVO MonsterVO::operator=(MonsterVO* target)
 	ret.ORI_X = target->ORI_X;
 	ret.ORI_Y = target->ORI_Y;
 	ret.ORI_Z = target->ORI_Z;
+
+	ret.DEST_X = target->DEST_X;
+	ret.DEST_Y = target->DEST_Y;
+	ret.DEST_Z = target->DEST_Z;
 
 	ret.Id = target->Id;
 

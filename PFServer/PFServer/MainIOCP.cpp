@@ -27,12 +27,6 @@ MainIOCP::MainIOCP()
 	fnProcess[EPacketType::SEARCH_CHARACTER].funcProcessPacket = SearchCharacters;
 	fnProcess[EPacketType::CREATE_CHARACTER].funcProcessPacket = CreateCharacter;
 	fnProcess[EPacketType::DELETE_CHARACTER].funcProcessPacket = DeleteCharacter;
-	//fnProcess[EPacketType::LOGOUT].funcProcessPacket = Logout;
-
-	//fnProcess[EPacketType::ENROLL_PLAYER].funcProcessPacket = PacketProcesses::EnrollCharacter;
-	//fnProcess[EPacketType::SEND_PLAYER].funcProcessPacket = PacketProcesses::SyncCharacters;
-	//fnProcess[EPacketType::HIT_PLAYER].funcProcessPacket = PacketProcesses::HitCharacter;
-	//fnProcess[EPacketType::CHAT].funcProcessPacket = PacketProcesses::BroadcastChat;
 }
 
 MainIOCP::~MainIOCP()

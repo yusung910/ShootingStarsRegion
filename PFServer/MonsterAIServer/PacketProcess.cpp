@@ -28,9 +28,9 @@ void PacketProcess::EnrollCharacter(stringstream& RecvStream, stSOCKETINFO* pSoc
 {
 	PlayerVO vo;
 	RecvStream >> vo;
-	
-	printf_s("INFO::[%d]캐릭터 접속 - X : [%f], Y : [%f], Z : [%f], Yaw : [%f]\n",		vo.SessionID, vo.X, vo.Y, vo.Z, vo.Yaw);
-	
+
+	printf_s("INFO::[%d]캐릭터 접속 - X : [%f], Y : [%f], Z : [%f], Yaw : [%f]\n", vo.SessionID, vo.X, vo.Y, vo.Z, vo.Yaw);
+
 	EnterCriticalSection(&criticalSec);
 	PlayerVO* pVO = &playerInfo.players[vo.SessionID];
 	pVO << vo;
@@ -38,7 +38,7 @@ void PacketProcess::EnrollCharacter(stringstream& RecvStream, stSOCKETINFO* pSoc
 	SessionSocket[vo.SessionID] = pSocket->socket;
 
 	printf_s("INFO::클라이언트 수 : %d\n", SessionSocket.size());
-	
+
 	BroadcastNewPlayer(vo);
 }
 
@@ -52,28 +52,73 @@ void PacketProcess::ReceiveCharacter(stringstream& RecvStream, stSOCKETINFO* pSo
 	PlayerVO* pinfo = &playerInfo.players[vo.SessionID];
 	pinfo << vo;
 
-	LeaveCriticalSection(&criticalSec);
-
 	WriteCharactersInfoToSocket(pSocket);
 	monsterIOCP->Send(pSocket);
 
-	////몬스터 정보를 던져주자
+
 	if (monInfo.monsters.size() == 0)
 	{
+		//몬스터 정보를 던져주자
 		monInfo.InitializeMonsterSet();
 	}
-
-	//몬스터 정보를 던져주자
 	stringstream SendMonsterStream;
 	SendMonsterStream << EPacketType::SYNC_MONSTER << endl;
 	SendMonsterStream << monInfo << endl;
 
+
+	//몬스터가 생성 되었을 경우
+	//플레이어 배열을 인자값으로 전달하여 상태값을 결정한다.
+	monInfo.SetMonstersCondition(playerInfo.players);
+
+	LeaveCriticalSection(&criticalSec);
 	Broadcast(SendMonsterStream);
+
+}
+
+void PacketProcess::HitMonster(stringstream& RecvStream, stSOCKETINFO* pSocket)
+{
+	MonsterVO mvo;
+	RecvStream >> mvo;
+	int monsterId = mvo.Id;
+	EnterCriticalSection(&criticalSec);
+
+	monInfo.monsters[monsterId].Damaged(mvo.BeDamageAmount);
+
+	printf_s("[Battle Info] Hit! 남은 체력 : %f\n", monInfo.monsters[monsterId].CUR_HP);
+	if (monInfo.monsters[monsterId].CUR_HP <= 0.0f)
+	{
+		monInfo.monsters[monsterId].MonsterCond = ECondition::IS_DEATH;
+		monInfo.monsters.erase(monsterId);
+	}
+	LeaveCriticalSection(&criticalSec);
+
+	WriteCharactersInfoToSocket(pSocket);
+	monsterIOCP->Send(pSocket);
+}
+
+void PacketProcess::HitPlayer(stringstream& RecvStream, stSOCKETINFO* pSocket)
+{
+	PlayerVO vo;
+	RecvStream >> vo;
+	int sessionId = vo.SessionID;
+
+	printf_s("hit player session id : %d, damaged : %f\n", sessionId, vo.BE_DAMAGE_AMOUNT);
 }
 
 void PacketProcess::Logout(stringstream& RecvStream, stSOCKETINFO* pSocket)
 {
+	int SessionId;
+	RecvStream >> SessionId;
+	printf_s("INFO::(%d)로그아웃 요청 수신\n", SessionId);
+	EnterCriticalSection(&criticalSec);
 
+	//잔여 플레이어 목록 배열에서 해당 SessionID키값에 해당하는 데이터를 지운다
+	playerInfo.players.erase(SessionId);
+
+	LeaveCriticalSection(&criticalSec);
+	SessionSocket.erase(SessionId);
+	printf_s("INFO::클라이언트 수 : %d\n", SessionSocket.size());
+	WriteCharactersInfoToSocket(pSocket);
 }
 
 void PacketProcess::BroadcastNewPlayer(PlayerVO vo)
@@ -82,7 +127,7 @@ void PacketProcess::BroadcastNewPlayer(PlayerVO vo)
 
 	SendStream << EPacketType::ENTER_NEW_PLAYER << endl;
 	SendStream << vo << endl;
-	
+
 	Broadcast(SendStream);
 }
 
@@ -101,12 +146,11 @@ void PacketProcess::Broadcast(stringstream& SendStream)
 }
 
 
-
 void PacketProcess::WriteCharactersInfoToSocket(stSOCKETINFO* pSocket)
 {
 	//왜인지 모르겠지만 잔여 데이터 때문에 클리어해줘야함
 	stringstream SendStream;
-	// 직렬화	
+	//직렬화	
 	SendStream << EPacketType::RECV_PLAYER << endl;
 	SendStream << playerInfo << endl;
 

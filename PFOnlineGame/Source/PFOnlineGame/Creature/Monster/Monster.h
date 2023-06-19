@@ -8,7 +8,7 @@
 #include "Monster.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PFONLINEGAME_API AMonster : public ACmn
@@ -16,8 +16,8 @@ class PFONLINEGAME_API AMonster : public ACmn
 	GENERATED_BODY()
 public:
 	AMonster();
-	void SetMonsterVO(MonsterVO* _monVO);
-	void MoveToLocation(FVector dest);
+	
+	void ToMovingAndAttack(FVector dest, FVector ori);
 
 	virtual void Tick(float DeltaTime) override;
 
@@ -28,12 +28,15 @@ public:
 	virtual void Dead() override;
 
 	FORCEINLINE int GetMonsterId() { return monVO.Id; };
-	FORCEINLINE void SetMonsterCond(ECondition cond) { monVO.MonsterCond = cond; }
 
-	FORCEINLINE void SetAttackTargetLoc(FVector v) { AttackTargetLoc = v; }
+	FORCEINLINE float GetMonsterHPRatio() { return CurHPRatio; }
+	FORCEINLINE void SetMonsterHPRatio(float _f) { CurHPRatio = _f; }
 
-	FORCEINLINE float GetMonsterHPRatio() { return monVO.CUR_HP / monVO.MAX_HP; }
+	FORCEINLINE void SetIsAttack(bool b) { isAttack = b; }
+	FORCEINLINE bool GetIsAttack() { return isAttack; }
 
+	//FORCEINLINE void SetMonsterCurHP(float f) { monVO.CUR_HP = f; }
+	FORCEINLINE void SetMonsterVO(MonsterVO _monVO) { monVO = _monVO; };
 protected:
 	//ApplyDamage함수로 데미지를 전달받는 함수
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
@@ -42,11 +45,11 @@ protected:
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Montage")
 		class UAnimMontage* BasicAttackMontage;
+
 private:
 	MonsterVO monVO;
-	//
-	FVector AttackTargetLoc;
+
+	bool isAttack;
 	
-	bool bDeadDelayFlag;
-	float fDeadDelayCount;
+	float CurHPRatio;
 };

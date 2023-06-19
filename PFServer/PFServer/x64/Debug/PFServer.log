@@ -1,15 +1,15 @@
 ﻿  DataAccess.cpp
   MainIOCP.cpp
-E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(159,13): warning C4477: 'printf_s' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'SOCKET'입니다.
-E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(159,13): message : 서식 문자열에서 '%lld'을(를) 사용하는 것이 좋습니다.
-E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(159,13): message : 서식 문자열에서 '%Id'을(를) 사용하는 것이 좋습니다.
-E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(159,13): message : 서식 문자열에서 '%I64d'을(를) 사용하는 것이 좋습니다.
-E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(133,7): warning C4101: 'nResult' :참조되지 않은 지역 변수입니다.
-E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(136,8): warning C4101: 'sendBytes' :참조되지 않은 지역 변수입니다.
-E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(259,50): warning C4267: '=': 'size_t'에서 'ULONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(289,50): warning C4267: '=': 'size_t'에서 'ULONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(316,50): warning C4267: '=': 'size_t'에서 'ULONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(339,50): warning C4267: '=': 'size_t'에서 'ULONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(153,13): warning C4477: 'printf_s' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'SOCKET'입니다.
+E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(153,13): message : 서식 문자열에서 '%lld'을(를) 사용하는 것이 좋습니다.
+E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(153,13): message : 서식 문자열에서 '%Id'을(를) 사용하는 것이 좋습니다.
+E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(153,13): message : 서식 문자열에서 '%I64d'을(를) 사용하는 것이 좋습니다.
+E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(127,7): warning C4101: 'nResult' :참조되지 않은 지역 변수입니다.
+E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(130,8): warning C4101: 'sendBytes' :참조되지 않은 지역 변수입니다.
+E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(253,50): warning C4267: '=': 'size_t'에서 'ULONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(283,50): warning C4267: '=': 'size_t'에서 'ULONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(310,50): warning C4267: '=': 'size_t'에서 'ULONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\ShootingStarsRegion\PFServer\PFServer\MainIOCP.cpp(333,50): warning C4267: '=': 'size_t'에서 'ULONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   main.cpp
   코드를 생성하고 있습니다...
   PFServer.vcxproj -> E:\ShootingStarsRegion\PFServer\PFServer\x64\Debug\PFServer.exe

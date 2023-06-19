@@ -28,7 +28,6 @@ AUserNetworkCntrl::AUserNetworkCntrl()
 
 	nMonsters = -1;
 	isSpawnMonster = false;
-	isDestroyMonster = false;
 
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -73,11 +72,6 @@ void AUserNetworkCntrl::Tick(float DeltaTime)
 		}
 
 		UpdateWorldInfo();
-
-		if (isDestroyMonster)
-		{
-			DestroyMonster();
-		}
 
 		// 몬스터 업데이트
 		UpdateMonsterSet();
@@ -173,18 +167,11 @@ MonsterSet* AUserNetworkCntrl::SendMonsterSet()
 	return MonsterInfos;
 }
 
-void AUserNetworkCntrl::RecvSpawnMonster(MonsterVO* _MonVO)
+void AUserNetworkCntrl::RecvSpawnMonster(MonsterSet* monsterSet)
 {
-	IS_NULL(_MonVO);
-	MonsVO = _MonVO;
+	IS_NULL(monsterSet);
+	MonsterInfos = monsterSet;
 	isSpawnMonster = true;
-}
-
-void AUserNetworkCntrl::RecvDestroyMonster(MonsterVO* _MonVO)
-{
-	IS_NULL(_MonVO);
-	MonsVO = _MonVO;
-	isDestroyMonster = true;
 }
 
 void AUserNetworkCntrl::SendPlayerInfo()
@@ -263,16 +250,10 @@ void AUserNetworkCntrl::UpdateNewPlayer()
 
 bool AUserNetworkCntrl::UpdateWorldInfo()
 {
-	if (OtherInfos == nullptr)
-		return false;
+	IS_NULL_FALSE(OtherInfos);
 
 	// 플레이어 업데이트
 	UpdatePlayerInfo(OtherInfos->Players[SessionID]);
-
-	for (auto info : OtherInfos->Players)
-	{
-		LOG_SCREEN_T("USER cond : %d", info.second.PlayerCond);
-	}
 
 	// 다른 플레이어 업데이트
 	TArray<AActor*> LocalSpawnedCharacters;
@@ -284,7 +265,6 @@ bool AUserNetworkCntrl::UpdateWorldInfo()
 	{
 		for (auto& player : OtherInfos->Players)
 		{
-			
 
 			if (player.second.SessionID == SessionID ||
 				player.second.PlayerCond == ECondition::IS_DEATH)
@@ -325,8 +305,6 @@ bool AUserNetworkCntrl::UpdateWorldInfo()
 
 			AUser* OtherPlayer = Cast<AUser>(LocalPlayer);
 			int nPlayerSessionId = OtherPlayer->GetPlayerSessionId();
-
-			
 
 			if (!OtherPlayer ||
 				nPlayerSessionId == -1 ||
@@ -408,116 +386,86 @@ void AUserNetworkCntrl::UpdatePlayerInfo(const PlayerVO& vo)
 	}
 }
 
-void AUserNetworkCntrl::DestroyMonster()
+void AUserNetworkCntrl::SpawnMonsters()
 {
-	UWorld* const world = GetWorld();
-	if (world)
-	{
-		// 스폰된 몬스터에서 찾아 파괴
-		//TArray<AActor*> SpawnedMonsters;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMonster::StaticClass(), SpawnedMonsters);
+	IS_NULL(MonsterInfos);
 
-		for (auto Actor : SpawnedMonsters)
+	if (MonsterInfos->monsters.empty())
+		return;
+
+	TArray<AActor*> LocalSpawnedMonsters;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMonster::StaticClass(), LocalSpawnedMonsters);
+
+	if (LocalSpawnedMonsters.Num() == 0)
+	{
+		for (auto& kvp : MonsterInfos->monsters)
 		{
-			AMonster* Monster = Cast<AMonster>(Actor);
-			if (Monster && Monster->GetMonsterId() == MonsVO->Id)
+			MonsterVO* monsVO = &kvp.second;
+			FVector LocalSpawnLocation;
+			LocalSpawnLocation.X = monsVO->X;
+			LocalSpawnLocation.Y = monsVO->Y;
+			LocalSpawnLocation.Z = monsVO->Z;
+
+			FRotator LocalSpawnRotation(0, 0, 0);
+
+			FActorSpawnParameters LocalSpawnParams;
+			LocalSpawnParams.Owner = this;
+			LocalSpawnParams.Instigator = GetInstigator();
+			//LocalSpawnParams.Name = FName(*FString(to_string(monsVO->Id).c_str()));
+
+			//액터를 스폰할 때 발생하는 충돌을 해결하는 방법을 제시
+			//이 구문 때문에 일부 액터가 스폰 안되던 현상 해결
+			LocalSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+			AMonster* LocalSpawnMonster = GetWorld()->SpawnActor<AMonster>(AMonster::StaticClass(), LocalSpawnLocation, LocalSpawnRotation, LocalSpawnParams);
+			if (LocalSpawnMonster)
 			{
-				gmode->SetMonsterHPRatio(0.f);
-				Monster->Dead();
-				break;
+				LocalSpawnMonster->SpawnDefaultController();
+				LocalSpawnMonster->SetMonsterVO(kvp.second);
 			}
 		}
-
-		// 업데이트 후 초기화
-		MonsVO = nullptr;
-		isDestroyMonster = false;
 	}
 }
 
 void AUserNetworkCntrl::UpdateMonsterSet()
 {
-	if (MonsterInfos == nullptr)
+	IS_NULL(MonsterInfos);
+
+	if (MonsterInfos->monsters.empty())
 		return;
 
 	UWorld* const world = GetWorld();
-	
+
 	if (world)
 	{
-		if (nMonsters == -1)
+		TArray<AActor*> LocalSpawnedMonsters;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMonster::StaticClass(), LocalSpawnedMonsters);
+		if(LocalSpawnedMonsters.Num() > 0)
 		{
-			nMonsters = MonsterInfos->monsters.size();
-
-			for (auto& kvp : MonsterInfos->monsters)
+			for (auto monActor : LocalSpawnedMonsters)
 			{
-				MonsterVO* monsVO = &kvp.second;
-				FVector LocalSpawnLocation;
-				LocalSpawnLocation.X = monsVO->X;
-				LocalSpawnLocation.Y = monsVO->Y;
-				LocalSpawnLocation.Z = monsVO->Z;
+				AMonster* spawnedMons = Cast<AMonster>(monActor);
+				MonsterVO mvo = MonsterInfos->monsters[spawnedMons->GetMonsterId()];
 
-				FRotator LocalSpawnRotation(0, 0, 0);
+				spawnedMons->SetMonsterHPRatio(mvo.CUR_HP / mvo.MAX_HP);
 
-				FActorSpawnParameters LocalSpawnParams;
-				LocalSpawnParams.Owner = this;
-				LocalSpawnParams.Instigator = GetInstigator();
-				LocalSpawnParams.Name = FName(*FString(to_string(monsVO->Id).c_str()));
-				
-				//액터를 스폰할 때 발생하는 충돌을 해결하는 방법을 제시
-				//이 구문 때문에 일부 액터가 스폰 안되던 현상 해결
-				LocalSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-				AMonster* LocalSpawnMonster = world->SpawnActor<AMonster>(AMonster::StaticClass(), LocalSpawnLocation, LocalSpawnRotation, LocalSpawnParams);
-				if (LocalSpawnMonster)
+				if (mvo.MonsterCond == ECondition::IS_DEATH)
 				{
-					LocalSpawnMonster->SpawnDefaultController();
-					LocalSpawnMonster->SetMonsterVO(monsVO);
+					spawnedMons->Dead();
 				}
+
 			}
+
+				//FVector dest(monsterInfo.DEST_X, monsterInfo.DEST_Y, monsterInfo.DEST_Z);
+				//FVector ori(monsterInfo.ORI_X, monsterInfo.ORI_Y, monsterInfo.ORI_Z);
+
+				//spawnedMons->ToMovingAndAttack(dest, ori);
+
+			//LOG_SCREEN_T("MONS[%d]", spawnedMons->GetMonsterId());
 		}
 		else
 		{
-			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMonster::StaticClass(), SpawnedMonsters);
-			if (SpawnedMonsters.Num() > 0)
-			{
-
-				for (auto actor : SpawnedMonsters)
-				{
-					AMonster* monster = Cast<AMonster>(actor);
-
-					if (monster)
-					{
-						MonsterVO* MonsterInfo = &MonsterInfos->monsters[monster->GetMonsterId()];
-
-						monster->SetMonsterVO(MonsterInfo);
-
-						if (MonsterInfo->MonsterCond == ECondition::IS_MOVE)
-						{
-							FVector LocalLocation;
-							LocalLocation.X = MonsterInfo->X;
-							LocalLocation.Y = MonsterInfo->Y;
-							LocalLocation.Z = MonsterInfo->Z;
-
-							monster->MoveToLocation(LocalLocation);
-							monster->SetAttackTargetLoc(LocalLocation);
-
-						}
-						else if (MonsterInfo->MonsterCond == ECondition::IS_ATTACK)
-						{
-							monster->Attack();
-						}
-
-						else if (MonsterInfo->MonsterCond == ECondition::IS_DEATH)
-						{
-							gmode->ShowMonsterHPBar(false);
-						}
-					}
-				}
-			}
-			else
-			{
-				nMonsters = -1;
-				MonsterInfos->monsters.clear();
-			}
+			SpawnMonsters();
 		}
 	}
 }
