@@ -58,7 +58,6 @@ void PacketProcess::ReceiveCharacter(stringstream& RecvStream, stSOCKETINFO* pSo
 
 	if (monInfo.monsters.size() == 0)
 	{
-		Sleep(3000);
 		//몬스터 정보를 던져주자
 		monInfo.InitializeMonsterSet();
 	}

@@ -411,7 +411,7 @@ void AUserNetworkCntrl::SpawnMonsters()
 			FActorSpawnParameters LocalSpawnParams;
 			LocalSpawnParams.Owner = this;
 			LocalSpawnParams.Instigator = GetInstigator();
-			LocalSpawnParams.Name = FName(*FString(to_string(monsVO->Id).c_str()));
+			//LocalSpawnParams.Name = FName(*FString(to_string(monsVO->Id).c_str()));
 
 			//액터를 스폰할 때 발생하는 충돌을 해결하는 방법을 제시
 			//이 구문 때문에 일부 액터가 스폰 안되던 현상 해결
@@ -439,36 +439,33 @@ void AUserNetworkCntrl::UpdateMonsterSet()
 	if (world)
 	{
 		TArray<AActor*> LocalSpawnedMonsters;
-
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMonster::StaticClass(), LocalSpawnedMonsters);
-
-		LOG_SCREEN_T("LocalSpawnedMonsters.Num() : %d", LocalSpawnedMonsters.Num());
-		if(LocalSpawnedMonsters.Num() == 0)
+		if(LocalSpawnedMonsters.Num() > 0)
 		{
-			SpawnMonsters();
+			for (auto monActor : LocalSpawnedMonsters)
+			{
+				AMonster* spawnedMons = Cast<AMonster>(monActor);
+				MonsterVO mvo = MonsterInfos->monsters[spawnedMons->GetMonsterId()];
+
+				spawnedMons->SetMonsterHPRatio(mvo.CUR_HP / mvo.MAX_HP);
+
+				if (mvo.MonsterCond == ECondition::IS_DEATH)
+				{
+					spawnedMons->Dead();
+				}
+
+			}
+
+				//FVector dest(monsterInfo.DEST_X, monsterInfo.DEST_Y, monsterInfo.DEST_Z);
+				//FVector ori(monsterInfo.ORI_X, monsterInfo.ORI_Y, monsterInfo.ORI_Z);
+
+				//spawnedMons->ToMovingAndAttack(dest, ori);
+
+			//LOG_SCREEN_T("MONS[%d]", spawnedMons->GetMonsterId());
 		}
 		else
 		{
-			AMonster* spawnedMons;
-			for (auto monMap : MonsterInfos->monsters)
-			{
-				MonsterVO mVO = monMap.second;
-				int monId = mVO.Id;
-				for (auto monActor : LocalSpawnedMonsters)
-				{
-					spawnedMons = Cast<AMonster>(monActor);
-					if (spawnedMons->GetMonsterId() == monId)
-					{
-						spawnedMons->SetMonsterHPRatio(mVO.CUR_HP / mVO.MAX_HP);
-						continue;
-					}
-					//MonsterVO mvo = MonsterInfos->monsters[spawnedMons->GetMonsterId()];
-					//if (mvo.MonsterCond == ECondition::IS_DEATH)
-					//{
-					//	spawnedMons->Dead();
-					//}
-				}
-			}
+			SpawnMonsters();
 		}
 	}
 }
