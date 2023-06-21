@@ -22,57 +22,57 @@ class PFONLINEGAME_API UGinst : public UGameInstance
 public:
 	UGinst();
 
-	EServerStatusCode InitSocket();
+	//EServerStatusCode InitSocket();
 
-	EServerStatusCode Connect(const char* pszIP, int nPort);
+	//EServerStatusCode Connect(const char* pszIP, int nPort);
 
-	EServerStatusCode Login(const FText& Id, const FText& Pw);
+	//EServerStatusCode Login(const FText& Id, const FText& Pw);
 
-	EServerStatusCode SearchCharacters();
+	//EServerStatusCode SearchCharacters();
 
-	EServerStatusCode CreateCharacter(PlayerVO vo);
+	//EServerStatusCode CreateCharacter(PlayerVO vo);
 
-	EServerStatusCode DeleteCharacter(PlayerVO vo);
+	//EServerStatusCode DeleteCharacter(PlayerVO vo);
 
-	EServerStatusCode EnrollPlayer(PlayerVO vo);
+	//EServerStatusCode EnrollPlayer(PlayerVO vo);
 
-	EServerStatusCode SendPlayer(PlayerVO vo);
+	//EServerStatusCode SendPlayer(PlayerVO vo);
 
-	EServerStatusCode HitPlayer(PlayerVO vo);
+	//EServerStatusCode HitPlayer(PlayerVO vo);
 
-	EServerStatusCode HitMonster(MonsterVO monsVO);
+	//EServerStatusCode HitMonster(MonsterVO monsVO);
 
-	EServerStatusCode StartListen();
+	//EServerStatusCode StartListen();
 
-	EServerStatusCode SendChatMessage(const string& msg);
+	//EServerStatusCode SendChatMessage(const string& msg);
 
-	void Disconnect();
+	//void Disconnect();
 
-	void SetGameModeToClientSocket(AGameModeBase* gm);
+	//void SetGameModeToClientSocket(AGameModeBase* gm);
 
-	void SetUserControllerToClientSocket(AUserNetworkCntrl* cntrl);
+	//void SetUserControllerToClientSocket(AUserNetworkCntrl* cntrl);
 
-	virtual void Init() override;
+	//virtual void Init() override;
 
-	FDeleCorrespondenceDone DeleCorresDone;
+	//FDeleCorrespondenceDone DeleCorresDone;
 
-	void SetPlayerVOInfo(PlayerVO& dest, class AUser* depart);
-	void SetPlayerVOInfo(PlayerVO& dest, PlayerVO* depart);
+	//void SetPlayerVOInfo(PlayerVO& dest, class AUser* depart);
+	//void SetPlayerVOInfo(PlayerVO& dest, PlayerVO* depart);
 
-	bool GetThreadStatus();
+	//bool GetThreadStatus();
 
-	void SetGamePlayerCharVO(PlayerVO vo);
-	FORCEINLINE PlayerVO GetGamePlayerCharVO() { return gamePlayChar; }
+	//void SetGamePlayerCharVO(PlayerVO vo);
+	//FORCEINLINE PlayerVO GetGamePlayerCharVO() { return gamePlayChar; }
 
-	FORCEINLINE void SetSessionID(int n) { SessionID = n; }
+	//FORCEINLINE void SetSessionID(int n) { SessionID = n; }
 
 	
 private:
 	CorrespondencePacket* Socket;
 
-	PlayerVO gamePlayChar;
+	//PlayerVO gamePlayChar;
 
 	//AUserNetworkCntrl에서 생성한 세션아이디를 GameInstance에 저장한다
 	//플레이어객체 정보를 생성할 때 사용한다
-	int SessionID;
+	//int SessionID;
 };

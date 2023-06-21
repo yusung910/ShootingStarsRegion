@@ -5,30 +5,12 @@
 #define PACKETDLL_API __declspec(dllimport)
 #endif
 
-// 멀티바이트 집합 사용시 define
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-
-#include <WinSock2.h>
+#include <string>
 #include <map>
 #include <vector>
 #include <iostream>
-#include <string>
-
-#include <process.h>
-#include <sstream>
-#include <algorithm>
-#include <string>
-#include <cstdlib> //rand(), srand()
-#include <ctime> //time()
-
 
 using namespace std;
-
-//패킷 최대 버퍼
-#define	MAX_BUFFER		4096
-
-//최대 클라이언트 연결 수
-#define MAX_CLIENTS		100
 
 
 enum PACKETDLL_API EPacketType
@@ -74,36 +56,4 @@ enum PACKETDLL_API EDamagedType
 	IS_PARALYSIS,
 	IS_POSION,
 	IS_FLAME,
-};
-
-
-// IOCP 소켓 구조체
-struct PACKETDLL_API stSOCKETINFO
-{
-	//구조체 주소, 전송 완료 확인을 위한 용도
-	WSAOVERLAPPED	overlapped;
-
-	//소켓 데이터의 송수신에서 데이터를 저장하고 보내기 위해 사용되는 버퍼
-	WSABUF			dataBuf;
-
-	//참조 소켓 인스턴스들에 사용되는 새로운 타입 //uint_ptr
-	SOCKET			socket;
-
-	//메세지 버퍼 저장 변수
-	char			messageBuffer[MAX_BUFFER];
-
-	//송신 버퍼 사이즈
-	int				recvBytes;
-	//수신 버퍼 사이즈
-	int				sendBytes;
-};
-
-// 패킷 처리 함수 포인터
-struct PACKETDLL_API FuncProcess
-{
-	void(*funcProcessPacket)(stringstream& RecvStream, stSOCKETINFO* pSocket);
-	FuncProcess()
-	{
-		funcProcessPacket = nullptr;
-	}
 };

@@ -1,1 +1,1 @@
-E:\ShootingStarsRegion\PFServer\PFServer\x64\Debug\PFServer.exe
+E:\ShootingStarsRegion\PFServer\PFServer\x64\Debug\LoginServer.exe
