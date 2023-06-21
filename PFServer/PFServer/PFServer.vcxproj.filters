@@ -27,9 +27,6 @@
     <ClCompile Include="DataAccess.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="PacketProcesses.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainIOCP.h">
@@ -39,9 +36,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="DataAccess.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="PacketProcesses.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

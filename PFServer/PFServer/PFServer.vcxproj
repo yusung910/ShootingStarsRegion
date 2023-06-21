@@ -161,13 +161,11 @@
     <ClCompile Include="DBConnector.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainIOCP.cpp" />
-    <ClCompile Include="PacketProcesses.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataAccess.h" />
     <ClInclude Include="DBConnector.h" />
     <ClInclude Include="MainIOCP.h" />
-    <ClInclude Include="PacketProcesses.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
